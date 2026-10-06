@@ -1,0 +1,112 @@
+export default {
+  root: {
+    class: "relative",
+  },
+  menu: {
+    class: "p-0 m-0 list-none flex",
+  },
+  menuitem: {
+    class: [
+      // Flexbox and Position
+      "relative",
+      "flex",
+      "justify-center",
+      "flex-1",
+      "overflow-hidden",
+
+      // Before
+      "before:border-t-2",
+      "before:border-line-default",
+      "before:w-full",
+      "[&:first-child]:before:w-[calc(50%+1rem)]",
+      "[&:last-child]:before:w-1/2",
+      "before:absolute",
+      "before:top-1/2",
+      "before:left-0",
+      "before:transform",
+      "before:mt-[calc(-1rem+1px)]",
+      "[&:first-child]:before:translate-x-[100%]",
+    ],
+  },
+  action: ({ props }) => ({
+    class: [
+      // Flexbox
+      "inline-flex items-center",
+      "flex-col",
+
+      // Transitions and Shape
+      "transition-shadow",
+      "rounded-md",
+
+      // Colors
+      "bg-transparent",
+
+      // States
+
+      // Misc
+      "overflow-hidden",
+      { "cursor-pointer": !props.readonly },
+    ],
+  }),
+  step: ({ context, props }) => ({
+    class: [
+      // Flexbox
+      "flex items-center justify-center",
+
+      // Position
+      "z-20",
+
+      // Shape
+      "rounded-full",
+      "border-2",
+
+      // Size
+      "w-8",
+      "h-8",
+      "text-sm",
+      "leading-[2rem]",
+      "font-medium",
+
+      // Colors
+      "bg-surface-raised",
+      "border-line-default",
+      {
+        "text-fg-strong": !context.active,
+        "text-fg-primary": context.active,
+      },
+
+      // States
+      {
+        "hover:border-line-strong": !context.active && !props.readonly,
+      },
+
+      // Transition
+      "transition-colors duration-200 ease-in-out",
+    ],
+  }),
+  label: ({ context }) => ({
+    class: [
+      // Font
+      "leading-[normal]",
+      "font-medium",
+
+      // Display
+      "block",
+
+      // Spacing
+      "mt-2",
+
+      // Colors
+      {
+        "text-fg-default": !context.active,
+        "text-fg-primary": context.active,
+      },
+
+      // Text and Overflow
+      "whitespace-nowrap",
+      "overflow-hidden",
+      "text-ellipsis",
+      "max-w-full",
+    ],
+  }),
+};

@@ -1,0 +1,125 @@
+export default {
+  root: {
+    class: "bg-surface-raised rounded-md",
+  },
+  panel: {
+    class: "p-1 overflow-hidden rounded-md bg-surface-raised",
+  },
+  header: {
+    class: "rounded-[4px]",
+  },
+  headerContent: ({ context }) => ({
+    class: [
+      // Shape
+      "rounded-[4px]",
+
+      // Color
+      "text-fg-subtle",
+      { "text-fg-default": context.active },
+
+      // States
+      "hover:bg-surface-hover",
+
+      // Transition
+      "transition duration-200 ease-in-out",
+      "transition-shadow duration-200",
+    ],
+  }),
+  headerLink: {
+    class: [
+      "relative",
+
+      // Font
+      "font-semibold",
+      "leading-none",
+
+      // Flex & Alignments
+      "flex items-center",
+
+      // Spacing
+      "py-2 px-3",
+
+      // Misc
+      "select-none cursor-pointer no-underline",
+    ],
+  },
+  headerLabel: {
+    class: "leading-none",
+  },
+  headerIcon: {
+    class: "mr-2",
+  },
+  submenuIcon: {
+    class: "mr-2 w-3 h-3",
+  },
+  content: {
+    class: [
+      // Color
+      "text-fg-default",
+    ],
+  },
+  rootList: {
+    class: "m-0 p-0 list-none",
+  },
+  menuitem: {
+    class: "relative my-[2px]",
+  },
+  itemContent: {
+    class: [
+      // Shape
+      "border-none rounded-[4px]",
+
+      // Color
+      "text-fg-default",
+
+      // Transition
+      "transition-shadow duration-200",
+    ],
+  },
+  itemLink: ({ context }) => ({
+    class: [
+      "relative",
+
+      // Font
+      "leading-none",
+
+      // Flex & Alignments
+      "flex items-center",
+
+      // Spacing
+      "py-2 px-3",
+
+      // Shape
+      "rounded-[4px]",
+
+      // Color
+      "text-fg-subtle",
+
+      // States
+      "hover:bg-surface-hover hover:text-fg-default",
+      {
+        "bg-surface-hover text-fg-default": context.focused,
+      },
+
+      // Misc
+      "cursor-pointer no-underline",
+      "select-none overflow-hidden",
+    ],
+  }),
+  itemIcon: {
+    class: "mr-2",
+  },
+  submenu: {
+    class: "p-0 m-0 list-none",
+  },
+  transition: {
+    enterFromClass: "max-h-0",
+    enterActiveClass:
+      "overflow-hidden transition-[max-height] duration-1000 ease-[cubic-bezier(0.42,0,0.58,1)]",
+    enterToClass: "max-h-[1000px]",
+    leaveFromClass: "max-h-[1000px]",
+    leaveActiveClass:
+      "overflow-hidden transition-[max-height] duration-[450ms] ease-[cubic-bezier(0,1,0,1)]",
+    leaveToClass: "max-h-0",
+  },
+};

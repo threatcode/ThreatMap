@@ -1,4 +1,5 @@
 allowBuilds:
+  '@fortawesome/fontawesome-free': false
   esbuild: true
 minimumReleaseAge: 7200
 minimumReleaseAgeExclude:

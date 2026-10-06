@@ -34,5 +34,25 @@ export default [
       "packages/sdk-client/src/transport/**/__generated__/**",
       "packages/sdk-client/src/rest/__generated__/**"
     ]
+  },
+  {
+    name: "PrimeVue Theme Presets",
+    files: ["packages/primevue/src/classic/**"],
+    rules: {
+      eqeqeq: "off",
+      "@typescript-eslint/strict-boolean-expressions": "off"
+    }
+  },
+  {
+    name: "PrimeVue Stories",
+    files: ["packages/primevue/src/stories/**"],
+    languageOptions: {
+      globals: {
+        console: "readonly"
+      }
+    },
+    rules: {
+      "vue/define-props-destructuring": "off"
+    }
   }
 ];

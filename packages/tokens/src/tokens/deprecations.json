@@ -1,0 +1,9 @@
+{
+  "$description": "Names on their way out. A listed name is still emitted and still works for at least one minor release after it is announced.",
+  "$schema": {
+    "replacement": "The token to move to. Omit when nothing takes the old name's job.",
+    "since": "The released version that announced the deprecation.",
+    "reason": "Why the name is going, in a sentence a plugin author can act on."
+  },
+  "deprecated": {}
+}

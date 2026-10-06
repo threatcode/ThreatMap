@@ -1,0 +1,77 @@
+export default {
+  root: ({ context }) => ({
+    class: [
+      // Position and Shadows
+      "absolute",
+      "p-fadein",
+      // Spacing
+      {
+        '[&[data-p-position="top"]]:py-1 [&[data-p-position="top"]]:px-0 py-0 px-1':
+          context?.right ||
+          context?.left ||
+          (!context?.right &&
+            !context?.left &&
+            !context?.top &&
+            !context?.bottom),
+        "py-1 px-0": context?.top || context?.bottom,
+      },
+
+      // Flipped Tooltip Arrow
+      '[&[data-p-position="top"]>[data-pc-section=arrow]]:border-x-[10px] [&[data-p-position="top"]>[data-pc-section=arrow]]:border-t-[10px] [&[data-p-position="top"]>[data-pc-section=arrow]]:border-b-0 [&[data-p-position="top"]>[data-pc-section=arrow]]:border-t-surface-selected [&[data-p-position="top"]>[data-pc-section=arrow]]:border-y-0 [&[data-p-position="top"]>[data-pc-section=arrow]]:border-x-transparent',
+
+      '[&[data-p-position="top"]>[data-pc-section=arrow]]:-ml-[10px] [&[data-p-position="top"]>[data-pc-section=arrow]]:left-1/2 [&[data-p-position="top"]>[data-pc-section=arrow]]:mt-auto [&[data-p-position="top"]>[data-pc-section=arrow]]:top-auto',
+    ],
+  }),
+  arrow: ({ context }) => ({
+    class: [
+      // Position
+      "absolute",
+
+      // Size
+      "w-0",
+      "h-0",
+
+      // Shape
+      "border-transparent",
+      "border-solid",
+      {
+        "border-y-[10px] border-r-[10px] border-l-0 border-r-surface-selected":
+          context?.right ||
+          (!context?.right &&
+            !context?.left &&
+            !context?.top &&
+            !context?.bottom),
+        "border-y-[10px] border-l-[10px] border-r-0 border-l-surface-selected":
+          context?.left,
+        "border-x-[10px] border-t-[10px] border-b-0 border-t-surface-selected ":
+          context?.top,
+        "border-x-[10px] border-b-[10px] border-t-0 border-b-surface-selected":
+          context?.bottom,
+      },
+
+      // Spacing
+      {
+        "-mt-[10px] top-1/2":
+          context?.right ||
+          context?.left ||
+          (!context?.right &&
+            !context?.left &&
+            !context?.top &&
+            !context?.bottom),
+        "-ml-[10px] left-1/2": context?.top || context?.bottom,
+      },
+    ],
+  }),
+  text: {
+    class: [
+      "p-3",
+      "bg-surface-selected",
+      "text-fg-default",
+      "leading-none",
+      "rounded-md",
+      "whitespace-pre-line",
+      "break-words",
+      "shadow-md",
+    ],
+  },
+};

@@ -12,10 +12,7 @@ export type ScanAggressivity =
   (typeof ScanAggressivity)[keyof typeof ScanAggressivity];
 
 export type InterruptReason =
-  | "Cancelled"
-  | "Timeout"
-  | "ProjectChanged"
-  | "RuntimeStopped";
+  "Cancelled" | "Timeout" | "ProjectChanged" | "RuntimeStopped";
 
 export type ScanConfig = {
   aggressivity: ScanAggressivity;

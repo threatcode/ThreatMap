@@ -1,6 +1,5 @@
 export type Result<TOk = void, TErr = string> =
-  | { kind: "Ok"; value: TOk }
-  | { kind: "Error"; error: TErr };
+  { kind: "Ok"; value: TOk } | { kind: "Error"; error: TErr };
 
 export const Result = {
   ok: <TOk>(value: TOk): Result<TOk, never> => ({ kind: "Ok", value }),

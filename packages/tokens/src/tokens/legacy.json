@@ -1,0 +1,36 @@
+{
+  "note": "Tokens read directly as a colour value, so each is emitted whole rather than as a triple, under the name given.",
+  "keepNote": "The highlight colours are data on a request. The scrollbar thumb and workflow nodes carry a light value the semantic token does not.",
+  "direct": {
+    "color.highlight.red": "--c-highlight-color-red",
+    "color.highlight.orange": "--c-highlight-color-orange",
+    "color.highlight.yellow": "--c-highlight-color-yellow",
+    "color.highlight.green": "--c-highlight-color-green",
+    "color.highlight.cyan": "--c-highlight-color-cyan",
+    "color.highlight.blue": "--c-highlight-color-blue",
+    "color.highlight.pink": "--c-highlight-color-pink",
+    "color.highlight.purple": "--c-highlight-color-purple",
+    "color.highlight.gray": "--c-highlight-color-gray",
+    "color.workflow-node.start-end": "--c-workflow-node-start-end",
+    "color.workflow-node.code": "--c-workflow-node-code",
+    "color.workflow-node.control": "--c-workflow-node-control",
+    "color.workflow-node.default": "--c-workflow-node-default",
+    "color.scrollbar.thumb": "--c-scrollbar-thumb"
+  },
+  "keep": [
+    "color.highlight.red",
+    "color.highlight.orange",
+    "color.highlight.yellow",
+    "color.highlight.green",
+    "color.highlight.cyan",
+    "color.highlight.blue",
+    "color.highlight.pink",
+    "color.highlight.purple",
+    "color.highlight.gray",
+    "color.scrollbar.thumb",
+    "color.workflow-node.start-end",
+    "color.workflow-node.code",
+    "color.workflow-node.control",
+    "color.workflow-node.default"
+  ]
+}
