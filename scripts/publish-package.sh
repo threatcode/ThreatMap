@@ -4,7 +4,7 @@ set -euo pipefail
 
 package="${1:?package is required}"
 registry="${2:?registry is required}"
-directory="packages/$package"
+directory="$(find packages -maxdepth 3 -type d -name "$package" | head -n1)"
 
 : "${DRY_RUN:?DRY_RUN must be set}"
 : "${NPM_DIST_TAG:?NPM_DIST_TAG must be set}"

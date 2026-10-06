@@ -42,7 +42,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           PACKAGE: ${{ inputs.package }}
         run: |
-          version="$(node -p "require('./packages/$PACKAGE/package.json').version")"
+          version="$(node -p "require('./$(find packages -maxdepth 3 -type d -name "$PACKAGE" | head -n1)/package.json').version")"
           ref="$PACKAGE-v$version"
           name="@threatmap/$PACKAGE"
 

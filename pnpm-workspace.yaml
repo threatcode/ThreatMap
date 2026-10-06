@@ -9,7 +9,7 @@ minimumReleaseAgeExclude:
   - '@threatmap/sdk-shared'
   - '@threatmap/quickssrf'
 packages:
-  - 'packages/*'
-  - 'packages/server-auth/examples/*'
-  - 'packages/sdk-client/examples/*'
+  - 'packages/*/*'
+  - 'packages/server/server-auth/examples/*'
+  - 'packages/sdk/sdk-client/examples/*'
   - 'tools/eslint-config'

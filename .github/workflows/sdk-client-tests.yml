@@ -5,10 +5,10 @@ on:
     branches:
       - 'main'
     paths:
-      - 'packages/sdk-client/**'
+      - 'packages/sdk/sdk-client/**'
   pull_request:
     paths:
-      - 'packages/sdk-client/**'
+      - 'packages/sdk/sdk-client/**'
 
 concurrency:
   group: sdk-client-tests-${{ github.ref_name }}

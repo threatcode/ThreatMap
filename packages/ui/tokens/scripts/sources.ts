@@ -42,7 +42,7 @@ type Manifest = {
   resolutionOrder: { $ref: string }[];
 };
 
-export const manifest = orFail(readJson<Manifest>("resolver.json"));
+const manifest = orFail(readJson<Manifest>("resolver.json"));
 
 type Legacy = {
   direct: Record<string, string>;

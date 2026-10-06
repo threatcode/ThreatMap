@@ -33,71 +33,31 @@ importers:
         specifier: 5.6.2
         version: 5.6.2
 
-  packages/primevue:
-    dependencies:
-      primevue:
-        specifier: 4.1.0
-        version: 4.1.0(vue@3.4.33(typescript@5.5.4))
-    devDependencies:
-      '@fortawesome/fontawesome-free':
-        specifier: 6.5.1
-        version: 6.5.1
-      '@histoire/plugin-vue':
-        specifier: 0.17.17
-        version: 0.17.17(histoire@0.17.17(@types/node@25.0.10)(supports-color@7.2.0)(vite@5.4.0(@types/node@25.0.10)))(vite@5.4.0(@types/node@25.0.10))(vue@3.4.33(typescript@5.5.4))
-      '@threatmap/tailwindcss':
-        specifier: workspace:*
-        version: link:../tailwindcss
-      '@vitejs/plugin-vue':
-        specifier: 5.1.0
-        version: 5.1.0(vite@5.4.0(@types/node@25.0.10))(vue@3.4.33(typescript@5.5.4))
-      histoire:
-        specifier: 0.17.17
-        version: 0.17.17(@types/node@25.0.10)(supports-color@7.2.0)(vite@5.4.0(@types/node@25.0.10))
-      tailwindcss:
-        specifier: 3.4.13
-        version: 3.4.13
-      tailwindcss-primeui:
-        specifier: 0.3.4
-        version: 0.3.4(tailwindcss@3.4.13)
-      typescript:
-        specifier: 5.5.4
-        version: 5.5.4
-      vite:
-        specifier: 5.4.0
-        version: 5.4.0(@types/node@25.0.10)
-      vue:
-        specifier: 3.4.33
-        version: 3.4.33(typescript@5.5.4)
-      vue-tsc:
-        specifier: 2.1.10
-        version: 2.1.10(typescript@5.5.4)
-
-  packages/quickjs-types: {}
-
-  packages/quickssrf:
+  packages/plugins/quickssrf:
     dependencies:
       '@threatmap/sdk-shared':
         specifier: workspace:*
-        version: link:../sdk-shared
+        version: link:../../sdk/sdk-shared
       zod:
         specifier: 4.3.6
         version: 4.3.6
 
-  packages/scanner:
+  packages/plugins/scanner:
     dependencies:
       '@threatmap/sdk-shared':
         specifier: workspace:*
-        version: link:../sdk-shared
+        version: link:../../sdk/sdk-shared
     devDependencies:
       '@threatmap/sdk-backend':
         specifier: workspace:*
-        version: link:../sdk-backend
+        version: link:../../sdk/sdk-backend
       tsdown:
         specifier: ^0.21.7
         version: 0.21.10(oxc-resolver@11.24.2)(typescript@5.6.2)
 
-  packages/sdk-backend:
+  packages/sdk/quickjs-types: {}
+
+  packages/sdk/sdk-backend:
     dependencies:
       '@threatmap/quickjs-types':
         specifier: workspace:*
@@ -106,7 +66,7 @@ importers:
         specifier: workspace:*
         version: link:../sdk-shared
 
-  packages/sdk-client:
+  packages/sdk/sdk-client:
     dependencies:
       '@graphql-typed-document-node/core':
         specifier: ^3.2.0
@@ -116,7 +76,7 @@ importers:
         version: link:../sdk-shared
       '@threatmap/server-auth':
         specifier: workspace:*
-        version: link:../server-auth
+        version: link:../../server/server-auth
       '@urql/core':
         specifier: ^6.0.0
         version: 6.0.3(graphql@16.14.2)
@@ -137,7 +97,7 @@ importers:
         version: 6.3.6
       zod:
         specifier: ^4.3.0
-        version: 4.6.5
+        version: 4.3.6
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 5.0.3
@@ -179,7 +139,7 @@ importers:
         specifier: 4.0.8
         version: 4.0.8(@types/node@25.0.10)(jiti@2.7.0)(jsdom@20.0.3(supports-color@7.2.0))(supports-color@7.2.0)(yaml@2.9.1)
 
-  packages/sdk-client/examples/base:
+  packages/sdk/sdk-client/examples/base:
     dependencies:
       '@threatmap/sdk-client':
         specifier: workspace:*
@@ -192,7 +152,7 @@ importers:
         specifier: 5.6.2
         version: 5.6.2
 
-  packages/sdk-client/examples/functionCall:
+  packages/sdk/sdk-client/examples/functionCall:
     dependencies:
       '@threatmap/sdk-client':
         specifier: workspace:*
@@ -205,27 +165,11 @@ importers:
         specifier: 5.6.2
         version: 5.6.2
 
-  packages/sdk-client/examples/functionCallSpec:
-    dependencies:
-      '@threatmap/quickssrf':
-        specifier: workspace:*
-        version: link:../../../quickssrf
-      '@threatmap/sdk-client':
-        specifier: workspace:*
-        version: link:../..
-    devDependencies:
-      '@types/node':
-        specifier: 25.0.10
-        version: 25.0.10
-      typescript:
-        specifier: 5.6.2
-        version: 5.6.2
-
-  packages/sdk-client/examples/pluginEvent:
+  packages/sdk/sdk-client/examples/functionCallSpec:
     dependencies:
       '@threatmap/quickssrf':
         specifier: workspace:*
-        version: link:../../../quickssrf
+        version: link:../../../../plugins/quickssrf
       '@threatmap/sdk-client':
         specifier: workspace:*
         version: link:../..
@@ -237,7 +181,23 @@ importers:
         specifier: 5.6.2
         version: 5.6.2
 
-  packages/sdk-client/examples/uploadFile:
+  packages/sdk/sdk-client/examples/pluginEvent:
+    dependencies:
+      '@threatmap/quickssrf':
+        specifier: workspace:*
+        version: link:../../../../plugins/quickssrf
+      '@threatmap/sdk-client':
+        specifier: workspace:*
+        version: link:../..
+    devDependencies:
+      '@types/node':
+        specifier: 25.0.10
+        version: 25.0.10
+      typescript:
+        specifier: 5.6.2
+        version: 5.6.2
+
+  packages/sdk/sdk-client/examples/uploadFile:
     dependencies:
       '@threatmap/sdk-client':
         specifier: workspace:*
@@ -250,7 +210,7 @@ importers:
         specifier: 5.6.2
         version: 5.6.2
 
-  packages/sdk-frontend:
+  packages/sdk/sdk-frontend:
     dependencies:
       '@ai-sdk/provider':
         specifier: ^3.0.1
@@ -263,17 +223,17 @@ importers:
         version: 6.43.13
       vue:
         specifier: ^3.0.0
-        version: 3.5.43(typescript@5.6.2)
+        version: 3.4.33(typescript@5.6.2)
 
-  packages/sdk-shared: {}
+  packages/sdk/sdk-shared: {}
 
-  packages/sdk-workflow:
+  packages/sdk/sdk-workflow:
     dependencies:
       '@threatmap/quickjs-types':
         specifier: workspace:*
         version: link:../quickjs-types
 
-  packages/server-auth:
+  packages/server/server-auth:
     dependencies:
       '@urql/core':
         specifier: ^6.0.0
@@ -288,7 +248,7 @@ importers:
         specifier: ^6.0.0
         version: 6.3.0(graphql@16.14.2)(ws@8.22.0)
 
-  packages/server-auth/examples/browser:
+  packages/server/server-auth/examples/browser:
     dependencies:
       '@threatmap/server-auth':
         specifier: workspace:*
@@ -301,7 +261,7 @@ importers:
         specifier: 5.6.2
         version: 5.6.2
 
-  packages/server-auth/examples/pat:
+  packages/server/server-auth/examples/pat:
     dependencies:
       '@threatmap/server-auth':
         specifier: workspace:*
@@ -314,7 +274,47 @@ importers:
         specifier: 5.6.2
         version: 5.6.2
 
-  packages/tailwindcss:
+  packages/ui/primevue:
+    dependencies:
+      primevue:
+        specifier: 4.1.0
+        version: 4.1.0(vue@3.4.33(typescript@5.5.4))
+    devDependencies:
+      '@fortawesome/fontawesome-free':
+        specifier: 6.5.1
+        version: 6.5.1
+      '@histoire/plugin-vue':
+        specifier: 0.17.17
+        version: 0.17.17(histoire@0.17.17(@types/node@25.0.10)(supports-color@7.2.0)(vite@5.4.0(@types/node@25.0.10)))(vite@5.4.0(@types/node@25.0.10))(vue@3.4.33(typescript@5.5.4))
+      '@threatmap/tailwindcss':
+        specifier: workspace:*
+        version: link:../tailwindcss
+      '@vitejs/plugin-vue':
+        specifier: 5.1.0
+        version: 5.1.0(vite@5.4.0(@types/node@25.0.10))(vue@3.4.33(typescript@5.5.4))
+      histoire:
+        specifier: 0.17.17
+        version: 0.17.17(@types/node@25.0.10)(supports-color@7.2.0)(vite@5.4.0(@types/node@25.0.10))
+      tailwindcss:
+        specifier: 3.4.13
+        version: 3.4.13
+      tailwindcss-primeui:
+        specifier: 0.3.4
+        version: 0.3.4(tailwindcss@3.4.13)
+      typescript:
+        specifier: 5.5.4
+        version: 5.5.4
+      vite:
+        specifier: 5.4.0
+        version: 5.4.0(@types/node@25.0.10)
+      vue:
+        specifier: 3.4.33
+        version: 3.4.33(typescript@5.5.4)
+      vue-tsc:
+        specifier: 2.1.10
+        version: 2.1.10(typescript@5.5.4)
+
+  packages/ui/tailwindcss:
     dependencies:
       tailwindcss:
         specifier: 3.4.13
@@ -327,7 +327,7 @@ importers:
         specifier: 5.4.0
         version: 5.4.0(@types/node@25.0.10)
 
-  packages/tokens:
+  packages/ui/tokens:
     devDependencies:
       '@fortawesome/fontawesome-free':
         specifier: 6.5.1
@@ -346,7 +346,7 @@ importers:
         version: 5.4.0(@types/node@22.17.2)
       vitest:
         specifier: 3.2.7
-        version: 3.2.7(@types/node@22.17.2)(jiti@2.7.0)(jsdom@20.0.3(supports-color@7.2.0))(supports-color@7.2.0)(yaml@2.9.1)
+        version: 3.2.7(@types/node@22.17.2)(jsdom@20.0.3(supports-color@7.2.0))(supports-color@7.2.0)
 
   tools/eslint-config:
     dependencies:
@@ -2493,14 +2493,8 @@ packages:
   '@vue/compiler-sfc@3.4.33':
     resolution: {integrity: sha512-7rk7Vbkn21xMwIUpHQR4hCVejwE6nvhBOiDgoBcR03qvGqRKA7dCBSsHZhwhYUsmjlbJ7OtD5UFIyhP6BY+c8A==}
 
-  '@vue/compiler-sfc@3.5.43':
-    resolution: {integrity: sha512-FCbrG3XNCRl+js3huuKx4IVHBLTvMkJhVepjbxSPu1gn4yWLaYtGNQdjJGZaMytXB6qb76qQDDmDSLy/vkmleQ==}
-
   '@vue/compiler-ssr@3.4.33':
     resolution: {integrity: sha512-0WveC9Ai+eT/1b6LCV5IfsufBZ0HP7pSSTdDjcuW302tTEgoBw8rHVHKPbGUtzGReUFCRXbv6zQDDgucnV2WzQ==}
-
-  '@vue/compiler-ssr@3.5.43':
-    resolution: {integrity: sha512-GF62orf7KiJX9RqrHNGrYBudsQGD0OhJ5nDs90O8UiDuS40+YMYomiXu6w6EuvtXuRDc3MSNis3EaaSKAVSWpg==}
 
   '@vue/compiler-vue2@2.7.16':
     resolution: {integrity: sha512-qYC3Psj9S/mfu9uVi5WvNZIzq+xnXMhOwbTFKKDD7b1lhpnn71jXSFdTQ+WsIEk0ONCd7VV2IMm7ONl6tbQ86A==}
@@ -2516,28 +2510,16 @@ packages:
   '@vue/reactivity@3.4.33':
     resolution: {integrity: sha512-B24QIelahDbyHipBgbUItQblbd4w5HpG3KccL+YkGyo3maXyS253FzcTR3pSz739OTphmzlxP7JxEMWBpewilA==}
 
-  '@vue/reactivity@3.5.43':
-    resolution: {integrity: sha512-G/c9GyOZNI2jVaaS6OX1EF1SSFSv7H0ERqNTl4+DTFMlZmB5eVAB53aLQNam/7NL2NPtaDD7RdVrzf8uJzMuOA==}
-
   '@vue/runtime-core@3.4.33':
     resolution: {integrity: sha512-6wavthExzT4iAxpe8q37/rDmf44nyOJGISJPxCi9YsQO+8w9v0gLCFLfH5TzD1V1AYrTAdiF4Y1cgUmP68jP6w==}
 
-  '@vue/runtime-core@3.5.43':
-    resolution: {integrity: sha512-hU6U6VnVhBGQDpvlnnDlIB8ZGJBiOcgk2lh/0InltHiz3D8oSkluvuvY+do1G2H3+udeKFsmaBlgVYP7gXQzEw==}
-
   '@vue/runtime-dom@3.4.33':
     resolution: {integrity: sha512-iHsMCUSFJ+4z432Bn9kZzHX+zOXa6+iw36DaVRmKYZpPt9jW9riF32SxNwB124i61kp9+AZtheQ/mKoJLerAaQ==}
-
-  '@vue/runtime-dom@3.5.43':
-    resolution: {integrity: sha512-Bb2Jc0YjjJdMt1SJmb9b2L/IWd3I8lIT9x9eS/xvvP9CiVgna0ffua74xKRmt4/uSJ+0r4iN8ex1jrqkhQGWQw==}
 
   '@vue/server-renderer@3.4.33':
     resolution: {integrity: sha512-jTH0d6gQcaYideFP/k0WdEu8PpRS9MF8d0b6SfZzNi+ap972pZ0TNIeTaESwdOtdY0XPVj54XEJ6K0wXxir4fw==}
     peerDependencies:
       vue: 3.4.33
-
-  '@vue/server-renderer@3.5.43':
-    resolution: {integrity: sha512-l2Ygjv9NehV94PSBxNWsAHC0j/eIIKbn92mBuWXAPGLnn6HfJ6MH5ubsd+Nk0YoZ5FRuxWI1P2VSoh+dbPQhCQ==}
 
   '@vue/shared@3.4.33':
     resolution: {integrity: sha512-aoRY0jQk3A/cuvdkodTrM4NMfxco8n55eG4H7ML/CRy7OryHfiqvug4xrCBBMbbN+dvXAetDDwZW9DXWWjBntA==}
@@ -5633,14 +5615,6 @@ packages:
       typescript:
         optional: true
 
-  vue@3.5.43:
-    resolution: {integrity: sha512-o5qZoksdnjIKvW1srZ3ab7pcDNYAerBjRe54D0LBLfRdCYFrSgBHVXokMas35czQc0//lmx4/tuY4ZNQ+Rf2Ng==}
-    peerDependencies:
-      typescript: '*'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
   w3c-keyname@2.2.8:
     resolution: {integrity: sha512-dpojBhNsCNN7T82Tm7k26A6G9ML3NkhDsnw9n/eoxSRlVBB4CEtIQ/KTCLI2Fwf3ataSXRhYFkQi3SlnFwPvPQ==}
 
@@ -7111,12 +7085,12 @@ snapshots:
   '@graphql-tools/optimize@1.4.0(graphql@16.14.2)':
     dependencies:
       graphql: 16.14.2
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   '@graphql-tools/optimize@2.0.1(graphql@16.14.2)':
     dependencies:
       graphql: 16.14.2
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   '@graphql-tools/prisma-loader@8.0.17(@types/node@25.0.10)(graphql@16.14.2)(supports-color@7.2.0)':
     dependencies:
@@ -7151,7 +7125,7 @@ snapshots:
       '@ardatan/relay-compiler': 12.0.0(graphql@16.14.2)(supports-color@7.2.0)
       '@graphql-tools/utils': 9.2.1(graphql@16.14.2)
       graphql: 16.14.2
-      tslib: 2.6.3
+      tslib: 2.8.1
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -7161,7 +7135,7 @@ snapshots:
       '@ardatan/relay-compiler': 13.0.2(graphql@16.14.2)
       '@graphql-tools/utils': 12.0.3(graphql@16.14.2)
       graphql: 16.14.2
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   '@graphql-tools/schema@10.1.3(graphql@16.14.2)':
     dependencies:
@@ -7241,13 +7215,13 @@ snapshots:
   '@graphql-tools/utils@8.13.1(graphql@16.14.2)':
     dependencies:
       graphql: 16.14.2
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   '@graphql-tools/utils@9.2.1(graphql@16.14.2)':
     dependencies:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.14.2)
       graphql: 16.14.2
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   '@graphql-tools/wrap@10.1.4(graphql@16.14.2)':
     dependencies:
@@ -7907,13 +7881,13 @@ snapshots:
       chai: 6.3.0
       tinyrainbow: 3.2.0
 
-  '@vitest/mocker@3.2.7(vite@7.3.6(@types/node@22.17.2)(jiti@2.7.0)(yaml@2.9.1))':
+  '@vitest/mocker@3.2.7(vite@5.4.0(@types/node@22.17.2))':
     dependencies:
       '@vitest/spy': 3.2.7
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 7.3.6(@types/node@22.17.2)(jiti@2.7.0)(yaml@2.9.1)
+      vite: 5.4.0(@types/node@22.17.2)
 
   '@vitest/mocker@4.0.8(vite@7.3.6(@types/node@25.0.10)(jiti@2.7.0)(yaml@2.9.1))':
     dependencies:
@@ -8023,27 +7997,10 @@ snapshots:
       postcss: 8.5.28
       source-map-js: 1.2.2
 
-  '@vue/compiler-sfc@3.5.43':
-    dependencies:
-      '@babel/parser': 7.29.9
-      '@vue/compiler-core': 3.5.43
-      '@vue/compiler-dom': 3.5.43
-      '@vue/compiler-ssr': 3.5.43
-      '@vue/shared': 3.5.43
-      estree-walker: 2.0.2
-      magic-string: 0.30.21
-      postcss: 8.5.28
-      source-map-js: 1.2.2
-
   '@vue/compiler-ssr@3.4.33':
     dependencies:
       '@vue/compiler-dom': 3.4.33
       '@vue/shared': 3.4.33
-
-  '@vue/compiler-ssr@3.5.43':
-    dependencies:
-      '@vue/compiler-dom': 3.5.43
-      '@vue/shared': 3.5.43
 
   '@vue/compiler-vue2@2.7.16':
     dependencies:
@@ -8067,19 +8024,10 @@ snapshots:
     dependencies:
       '@vue/shared': 3.4.33
 
-  '@vue/reactivity@3.5.43':
-    dependencies:
-      '@vue/shared': 3.5.43
-
   '@vue/runtime-core@3.4.33':
     dependencies:
       '@vue/reactivity': 3.4.33
       '@vue/shared': 3.4.33
-
-  '@vue/runtime-core@3.5.43':
-    dependencies:
-      '@vue/reactivity': 3.5.43
-      '@vue/shared': 3.5.43
 
   '@vue/runtime-dom@3.4.33':
     dependencies:
@@ -8088,24 +8036,17 @@ snapshots:
       '@vue/shared': 3.4.33
       csstype: 3.2.3
 
-  '@vue/runtime-dom@3.5.43':
-    dependencies:
-      '@vue/reactivity': 3.5.43
-      '@vue/runtime-core': 3.5.43
-      '@vue/shared': 3.5.43
-      csstype: 3.2.3
-
   '@vue/server-renderer@3.4.33(vue@3.4.33(typescript@5.5.4))':
     dependencies:
       '@vue/compiler-ssr': 3.4.33
       '@vue/shared': 3.4.33
       vue: 3.4.33(typescript@5.5.4)
 
-  '@vue/server-renderer@3.5.43':
+  '@vue/server-renderer@3.4.33(vue@3.4.33(typescript@5.6.2))':
     dependencies:
-      '@vue/compiler-ssr': 3.5.43
-      '@vue/runtime-dom': 3.5.43
-      '@vue/shared': 3.5.43
+      '@vue/compiler-ssr': 3.4.33
+      '@vue/shared': 3.4.33
+      vue: 3.4.33(typescript@5.6.2)
 
   '@vue/shared@3.4.33': {}
 
@@ -9501,7 +9442,7 @@ snapshots:
   graphql-tag@2.12.7(graphql@16.14.2):
     dependencies:
       graphql: 16.14.2
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   graphql-ws@6.3.0(graphql@16.14.2)(ws@8.22.0):
     dependencies:
@@ -9794,7 +9735,7 @@ snapshots:
 
   is-lower-case@2.0.2:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   is-map@2.0.3: {}
 
@@ -9849,7 +9790,7 @@ snapshots:
 
   is-upper-case@2.0.2:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   is-weakmap@2.0.2: {}
 
@@ -10065,11 +10006,11 @@ snapshots:
 
   lower-case-first@2.0.2:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   lower-case@2.0.2:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   lru-cache@11.5.3: {}
 
@@ -10941,7 +10882,7 @@ snapshots:
 
   sponge-case@1.0.1:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   sprintf-js@1.0.3: {}
 
@@ -11030,7 +10971,7 @@ snapshots:
 
   swap-case@2.0.2:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   symbol-tree@3.2.4: {}
 
@@ -11126,7 +11067,7 @@ snapshots:
 
   title-case@3.0.3:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   to-regex-range@5.0.1:
     dependencies:
@@ -11387,11 +11328,11 @@ snapshots:
 
   upper-case-first@2.0.2:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   upper-case@2.0.2:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.8.1
 
   uri-js@4.4.1:
     dependencies:
@@ -11427,16 +11368,15 @@ snapshots:
       - supports-color
       - terser
 
-  vite-node@3.2.4(@types/node@22.17.2)(jiti@2.7.0)(supports-color@7.2.0)(yaml@2.9.1):
+  vite-node@3.2.4(@types/node@22.17.2)(supports-color@7.2.0):
     dependencies:
       cac: 6.7.14
       debug: 4.4.3(supports-color@7.2.0)
       es-module-lexer: 1.7.0
       pathe: 2.0.3
-      vite: 7.3.6(@types/node@22.17.2)(jiti@2.7.0)(yaml@2.9.1)
+      vite: 5.4.0(@types/node@22.17.2)
     transitivePeerDependencies:
       - '@types/node'
-      - jiti
       - less
       - lightningcss
       - sass
@@ -11445,8 +11385,6 @@ snapshots:
       - sugarss
       - supports-color
       - terser
-      - tsx
-      - yaml
 
   vite-tsconfig-paths@5.1.4(supports-color@7.2.0)(typescript@5.6.2)(vite@7.3.6(@types/node@25.0.10)(jiti@2.7.0)(yaml@2.9.1)):
     dependencies:
@@ -11477,20 +11415,6 @@ snapshots:
       '@types/node': 25.0.10
       fsevents: 2.3.3
 
-  vite@7.3.6(@types/node@22.17.2)(jiti@2.7.0)(yaml@2.9.1):
-    dependencies:
-      esbuild: 0.28.2
-      fdir: 6.5.0(picomatch@4.0.7)
-      picomatch: 4.0.7
-      postcss: 8.5.28
-      rollup: 4.63.6
-      tinyglobby: 0.2.17
-    optionalDependencies:
-      '@types/node': 22.17.2
-      fsevents: 2.3.3
-      jiti: 2.7.0
-      yaml: 2.9.1
-
   vite@7.3.6(@types/node@25.0.10)(jiti@2.7.0)(yaml@2.9.1):
     dependencies:
       esbuild: 0.28.2
@@ -11505,11 +11429,11 @@ snapshots:
       jiti: 2.7.0
       yaml: 2.9.1
 
-  vitest@3.2.7(@types/node@22.17.2)(jiti@2.7.0)(jsdom@20.0.3(supports-color@7.2.0))(supports-color@7.2.0)(yaml@2.9.1):
+  vitest@3.2.7(@types/node@22.17.2)(jsdom@20.0.3(supports-color@7.2.0))(supports-color@7.2.0):
     dependencies:
       '@types/chai': 5.2.3
       '@vitest/expect': 3.2.7
-      '@vitest/mocker': 3.2.7(vite@7.3.6(@types/node@22.17.2)(jiti@2.7.0)(yaml@2.9.1))
+      '@vitest/mocker': 3.2.7(vite@5.4.0(@types/node@22.17.2))
       '@vitest/pretty-format': 3.2.7
       '@vitest/runner': 3.2.7
       '@vitest/snapshot': 3.2.7
@@ -11527,14 +11451,13 @@ snapshots:
       tinyglobby: 0.2.17
       tinypool: 1.1.1
       tinyrainbow: 2.0.0
-      vite: 7.3.6(@types/node@22.17.2)(jiti@2.7.0)(yaml@2.9.1)
-      vite-node: 3.2.4(@types/node@22.17.2)(jiti@2.7.0)(supports-color@7.2.0)(yaml@2.9.1)
+      vite: 5.4.0(@types/node@22.17.2)
+      vite-node: 3.2.4(@types/node@22.17.2)(supports-color@7.2.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 22.17.2
       jsdom: 20.0.3(supports-color@7.2.0)
     transitivePeerDependencies:
-      - jiti
       - less
       - lightningcss
       - msw
@@ -11544,8 +11467,6 @@ snapshots:
       - sugarss
       - supports-color
       - terser
-      - tsx
-      - yaml
 
   vitest@4.0.8(@types/node@25.0.10)(jiti@2.7.0)(jsdom@20.0.3(supports-color@7.2.0))(supports-color@7.2.0)(yaml@2.9.1):
     dependencies:
@@ -11617,13 +11538,13 @@ snapshots:
     optionalDependencies:
       typescript: 5.5.4
 
-  vue@3.5.43(typescript@5.6.2):
+  vue@3.4.33(typescript@5.6.2):
     dependencies:
-      '@vue/compiler-dom': 3.5.43
-      '@vue/compiler-sfc': 3.5.43
-      '@vue/runtime-dom': 3.5.43
-      '@vue/server-renderer': 3.5.43
-      '@vue/shared': 3.5.43
+      '@vue/compiler-dom': 3.4.33
+      '@vue/compiler-sfc': 3.4.33
+      '@vue/runtime-dom': 3.4.33
+      '@vue/server-renderer': 3.4.33(vue@3.4.33(typescript@5.6.2))
+      '@vue/shared': 3.4.33
     optionalDependencies:
       typescript: 5.6.2
 

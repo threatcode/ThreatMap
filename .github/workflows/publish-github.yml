@@ -71,7 +71,7 @@ jobs:
             quickjs-types|sdk-shared|server-auth|sdk-client) ;;
             *) echo "Unsupported independent package: $PACKAGE" >&2; exit 1 ;;
           esac
-          version="$(node -p "require('./packages/$PACKAGE/package.json').version")"
+          version="$(node -p "require('./$(find packages -maxdepth 3 -type d -name "$PACKAGE" | head -n1)/package.json').version")"
           test "$RELEASE_REF" = "$PACKAGE-v$version"
           tag_sha="$(git rev-list -n 1 "refs/tags/$RELEASE_REF")"
           test -n "$tag_sha"
@@ -99,8 +99,8 @@ jobs:
           NPM_TOKEN: ${{ secrets.GITHUB_PACKAGES_TOKEN || github.token }}
           NPM_CONFIG_USERCONFIG: ${{ github.workspace }}/.npmrc.github
         run: | # zizmor: ignore[use-trusted-publishing] GitHub Packages requires token authentication
-          name="$(node -p "require('./packages/$PACKAGE/package.json').name")"
-          version="$(node -p "require('./packages/$PACKAGE/package.json').version")"
+          name="$(node -p "require('./$(find packages -maxdepth 3 -type d -name "$PACKAGE" | head -n1)/package.json').name")"
+          version="$(node -p "require('./$(find packages -maxdepth 3 -type d -name "$PACKAGE" | head -n1)/package.json').version")"
           if [[ "$DRY_RUN" != "true" ]]; then
             set +e
             output="$(npm view "$name@$version" version --registry https://npm.pkg.github.com 2>&1)"
@@ -114,6 +114,6 @@ jobs:
               exit "$status"
             fi
           fi
-          args=("./packages/$PACKAGE" --access public --registry https://npm.pkg.github.com)
+          args=("$(find packages -maxdepth 3 -type d -name "$PACKAGE" | head -n1)" --access public --registry https://npm.pkg.github.com)
           if [[ "$DRY_RUN" == "true" ]]; then args+=(--dry-run); fi
           npm publish "${args[@]}"
