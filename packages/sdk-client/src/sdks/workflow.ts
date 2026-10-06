@@ -1,0 +1,302 @@
+import { WorkflowTask } from "./task.js";
+
+import { encodeBlob } from "@/convert/blob.js";
+import {
+  mapToRunConvertWorkflowResult,
+  mapToTestWorkflowConvertResult,
+  mapToTestWorkflowHttpResult,
+  mapToWorkflow,
+} from "@/convert/workflow.js";
+import { OtherUserError } from "@/errors/index.js";
+import {
+  CreateWorkflowDocument,
+  DeleteWorkflowDocument,
+  type GraphQLClient,
+  RunActiveWorkflowDocument,
+  RunConvertWorkflowDocument,
+  TestWorkflowActiveDocument,
+  TestWorkflowConvertDocument,
+  TestWorkflowPassiveDocument,
+  ToggleWorkflowDocument,
+  UpdateWorkflowDocument,
+  WorkflowDocument,
+  WorkflowsDocument,
+} from "@/graphql/index.js";
+import type {
+  CreateWorkflowOptions,
+  ID,
+  RunActiveWorkflowOptions,
+  RunConvertWorkflowOptions,
+  RunConvertWorkflowResult,
+  TestWorkflowActiveOptions,
+  TestWorkflowConvertOptions,
+  TestWorkflowConvertResult,
+  TestWorkflowHttpResult,
+  TestWorkflowPassiveOptions,
+  UpdateWorkflowOptions,
+} from "@/types/index.js";
+import type { Workflow as WorkflowType } from "@/types/workflow.js";
+import { handleGraphQLError } from "@/utils/errors.js";
+import { isAbsent, isPresent } from "@/utils/optional.js";
+
+const buildTestWorkflowHttpInput = (
+  options: TestWorkflowPassiveOptions | TestWorkflowActiveOptions,
+) => ({
+  definition: options.definition,
+  request: {
+    connectionInfo: {
+      host: options.request.connection.host,
+      port: options.request.connection.port,
+      isTLS: options.request.connection.isTLS,
+      SNI: options.request.connection.SNI,
+    },
+    raw: encodeBlob(options.request.raw),
+  },
+  response: isPresent(options.response)
+    ? { raw: encodeBlob(options.response.raw) }
+    : undefined,
+});
+
+/**
+ * Higher-level SDK for workflow-related operations.
+ */
+export class WorkflowSDK {
+  private readonly graphql: GraphQLClient;
+
+  constructor(graphql: GraphQLClient) {
+    this.graphql = graphql;
+  }
+
+  /**
+   * List all workflows.
+   */
+  async list(): Promise<WorkflowType[]> {
+    const result = await this.graphql.query(WorkflowsDocument);
+    return result.workflows.map(mapToWorkflow);
+  }
+
+  /**
+   * Get a workflow by ID.
+   */
+  async get(id: ID): Promise<WorkflowType | undefined> {
+    const result = await this.graphql.query(WorkflowDocument, {
+      id,
+    });
+
+    if (isAbsent(result.workflow)) {
+      return undefined;
+    }
+
+    return mapToWorkflow(result.workflow);
+  }
+
+  /**
+   * Create a new workflow.
+   */
+  async create(options: CreateWorkflowOptions): Promise<WorkflowType> {
+    const result = await this.graphql.mutation(CreateWorkflowDocument, {
+      input: {
+        definition: options.definition,
+        global: options.global,
+      },
+    });
+
+    const payload = result.createWorkflow;
+
+    if (isPresent(payload.error)) {
+      handleGraphQLError(payload.error);
+    }
+
+    if (isAbsent(payload.workflow)) {
+      throw new Error("Create workflow returned no workflow");
+    }
+
+    return mapToWorkflow(payload.workflow);
+  }
+
+  /**
+   * Update a workflow.
+   */
+  async update(id: ID, options: UpdateWorkflowOptions): Promise<WorkflowType> {
+    const result = await this.graphql.mutation(UpdateWorkflowDocument, {
+      id,
+      input: {
+        definition: options.definition,
+      },
+    });
+
+    const payload = result.updateWorkflow;
+
+    if (isPresent(payload.error)) {
+      handleGraphQLError(payload.error);
+    }
+
+    if (isAbsent(payload.workflow)) {
+      throw new Error("Update workflow returned no workflow");
+    }
+
+    return mapToWorkflow(payload.workflow);
+  }
+
+  /**
+   * Delete a workflow by ID.
+   */
+  async delete(id: ID): Promise<void> {
+    const result = await this.graphql.mutation(DeleteWorkflowDocument, {
+      id,
+    });
+
+    const payload = result.deleteWorkflow;
+
+    if (isPresent(payload.error)) {
+      handleGraphQLError(payload.error);
+    }
+  }
+
+  /**
+   * Toggle a workflow's enabled state.
+   */
+  async toggle(id: ID, enabled: boolean): Promise<WorkflowType> {
+    const result = await this.graphql.mutation(ToggleWorkflowDocument, {
+      id,
+      enabled,
+    });
+
+    const payload = result.toggleWorkflow;
+
+    if (isPresent(payload.error)) {
+      handleGraphQLError(payload.error);
+    }
+
+    if (isAbsent(payload.workflow)) {
+      throw new Error("Toggle workflow returned no workflow");
+    }
+
+    return mapToWorkflow(payload.workflow);
+  }
+
+  /**
+   * Test a workflow against input without saving it.
+   */
+  async test(
+    options: TestWorkflowConvertOptions,
+  ): Promise<TestWorkflowConvertResult>;
+  async test(
+    options: TestWorkflowPassiveOptions,
+  ): Promise<TestWorkflowHttpResult>;
+  async test(
+    options: TestWorkflowActiveOptions,
+  ): Promise<TestWorkflowHttpResult>;
+  async test(
+    options:
+      | TestWorkflowConvertOptions
+      | TestWorkflowPassiveOptions
+      | TestWorkflowActiveOptions,
+  ): Promise<TestWorkflowConvertResult | TestWorkflowHttpResult> {
+    switch (options.kind) {
+      case "convert": {
+        const result = await this.graphql.mutation(
+          TestWorkflowConvertDocument,
+          {
+            input: {
+              definition: options.definition,
+              data: encodeBlob(options.data),
+            },
+          },
+        );
+
+        const payload = result.testWorkflowConvert;
+
+        if (isPresent(payload.error)) {
+          handleGraphQLError(payload.error);
+        }
+
+        return mapToTestWorkflowConvertResult(payload);
+      }
+      case "passive": {
+        const result = await this.graphql.mutation(
+          TestWorkflowPassiveDocument,
+          {
+            input: buildTestWorkflowHttpInput(options),
+          },
+        );
+
+        const payload = result.testWorkflowPassive;
+
+        if (isPresent(payload.error)) {
+          handleGraphQLError(payload.error);
+        }
+
+        return mapToTestWorkflowHttpResult(payload);
+      }
+      case "active": {
+        const result = await this.graphql.mutation(TestWorkflowActiveDocument, {
+          input: buildTestWorkflowHttpInput(options),
+        });
+
+        const payload = result.testWorkflowActive;
+
+        if (isPresent(payload.error)) {
+          handleGraphQLError(payload.error);
+        }
+
+        return mapToTestWorkflowHttpResult(payload);
+      }
+      default: {
+        throw new OtherUserError("INTERNAL", "Unhandled workflow kind");
+      }
+    }
+  }
+
+  /**
+   * Run a workflow.
+   *
+   * Convert workflows return their output; active workflows produce no output
+   * right now and return a task handle instead.
+   */
+  async run(
+    options: RunConvertWorkflowOptions,
+  ): Promise<RunConvertWorkflowResult>;
+  async run(options: RunActiveWorkflowOptions): Promise<WorkflowTask>;
+  async run(
+    options: RunConvertWorkflowOptions | RunActiveWorkflowOptions,
+  ): Promise<RunConvertWorkflowResult | WorkflowTask> {
+    switch (options.kind) {
+      case "convert": {
+        const result = await this.graphql.mutation(RunConvertWorkflowDocument, {
+          id: options.id,
+          input: encodeBlob(options.data),
+        });
+
+        const payload = result.runConvertWorkflow;
+
+        if (isPresent(payload.error)) {
+          handleGraphQLError(payload.error);
+        }
+
+        return mapToRunConvertWorkflowResult(payload);
+      }
+      case "active": {
+        const result = await this.graphql.mutation(RunActiveWorkflowDocument, {
+          id: options.id,
+          input: { requestId: options.requestId },
+        });
+
+        const payload = result.runActiveWorkflow;
+
+        if (isPresent(payload.error)) {
+          handleGraphQLError(payload.error);
+        }
+
+        if (isAbsent(payload.task)) {
+          throw new Error("Run active workflow returned no task");
+        }
+
+        return new WorkflowTask(this.graphql, payload.task);
+      }
+      default: {
+        throw new OtherUserError("INTERNAL", "Unhandled workflow kind");
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "@threatmap/sdk-client-example-plugin-event",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node ./index.ts"
+  },
+  "dependencies": {
+    "@threatmap/quickssrf": "workspace:*",
+    "@threatmap/sdk-client": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "25.0.10",
+    "typescript": "5.6.2"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@threatmap/sdk-shared",
+  "version": "0.1.0",
+  "description": "Typing helpers shared between SDKs",
+  "author": "ThreatCode <dev@khulnasoft.com>",
+  "repository": "https://github.com/threatcode/threatmap/",
+  "license": "MIT",
+  "types": "./src/index.d.ts",
+  "files": [
+    "src/*"
+  ],
+  "scripts": {
+    "build": "echo 'No build step required for @threatmap/sdk-shared'",
+    "typecheck": "tsc --noEmit"
+  }
+}

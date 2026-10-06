@@ -1,0 +1,63 @@
+schema: ./node_modules/@threatmap/schema-proxy/schema.graphql
+documents:
+  - ./src/transport/latest/documents/*.graphql
+
+generates:
+  ./src/transport/latest/__generated__/enums.ts:
+    plugins:
+      - typescript
+    config:
+      namingConvention:
+        typeNames: keep
+      onlyEnums: true
+
+  ./src/transport/latest/__generated__/types.ts:
+    plugins:
+      - typescript
+    config:
+      enumValues: './enums.js'
+
+  ./src/transport/latest/__generated__/:
+    plugins:
+      - typescript-operations
+      - typed-document-node
+    preset: near-operation-file
+    presetConfig:
+      folder: ../__generated__
+      extension: .ts
+      baseTypesPath: ./types.js.js # Hack to add the js extension
+    config:
+      useTypeImports: true
+
+config:
+  declarationKind: type
+  maybeValue: 'T | undefined | null'
+  strictScalars: true
+  skipTypename: true
+  dedupeFragments: true
+  enumsAsConst: true
+  scalars:
+    DateTime: string
+    Duration: number
+    Blob: string
+    Port: number
+    Timestamp: string
+    Snapshot: number
+    Rank: string
+    Token: string
+    Url: string
+    JSON: unknown
+    JsonObject: Record<string, unknown>
+    Upload: File
+    Image: string
+    Sensitive: string
+    Uri: string
+    Alias: string
+    HTTPQL: string
+    JsonRaw: string
+    Version: string
+    Binary: string
+
+hooks:
+  afterAllFileWrite:
+    - prettier --write

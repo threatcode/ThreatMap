@@ -1,0 +1,9 @@
+export { default as pluginJs } from "@eslint/js";
+export { default as pluginVue } from "eslint-plugin-vue";
+export { default as pluginTs } from "typescript-eslint";
+export { default as pluginPrettier } from "eslint-plugin-prettier/recommended";
+export { default as pluginCompat } from "eslint-plugin-compat";
+export { default as pluginImport } from "eslint-plugin-import";
+export { default as pluginNode } from "eslint-plugin-n";
+export { default as pluginNoUnsanitized } from "eslint-plugin-no-unsanitized";
+export { default as pluginConfigPrettier } from "eslint-config-prettier/flat";

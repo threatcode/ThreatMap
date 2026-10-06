@@ -1,0 +1,23 @@
+[plugins]
+toolshed = "https://github.com/threatcode/mise-toolshed"
+
+[tools]
+node = "24.11.1"
+pnpm = "11.28.0"
+"toolshed:get-skills" = "latest"
+
+[tasks.typecheck]
+description = "Run typecheck"
+run = "pnpm typecheck"
+
+[tasks.lint]
+description = "Run linter"
+run = "pnpm lint"
+
+[tasks.knip]
+description = "Run knip"
+run = "pnpm knip"
+
+[tasks.validate]
+description = 'Validate the project'
+depends = ['typecheck', 'lint', 'knip']

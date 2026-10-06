@@ -1,0 +1,24 @@
+{
+  "name": "@threatmap/threatmap",
+  "private": true,
+  "scripts": {
+    "lint": "eslint ./packages/**/src --fix",
+    "typecheck": "pnpm -r typecheck",
+    "knip": "knip",
+    "generate:doc": "pnpm -r generate:doc"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=10.17"
+  },
+  "devDependencies": {
+    "@threatmap/eslint-config": "workspace:*",
+    "eslint": "9.39.2",
+    "knip": "5.82.1",
+    "tsdown": "0.20.1",
+    "typescript": "5.6.2",
+    "typedoc": "0.28.14",
+    "typedoc-plugin-markdown": "4.9.0",
+    "typedoc-plugin-missing-exports": "4.1.2"
+  }
+}

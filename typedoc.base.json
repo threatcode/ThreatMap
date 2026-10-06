@@ -1,0 +1,19 @@
+{
+  "plugin": [
+    "typedoc-plugin-markdown",
+    "typedoc-plugin-missing-exports",
+    "./scripts/documentation-prepend.mjs",
+    "./scripts/category-router.mjs"
+  ],
+  "cleanOutputDir": true,
+  "outputFileStrategy": "modules",
+  "entryFileName": "index",
+  "readme": "none",
+  "disableSources": true,
+  "excludeExternals": true,
+  "placeInternalsInOwningModule": true,
+  "hidePageHeader": true,
+  "expandParameters": true,
+  "parametersFormat": "table",
+  "indexFormat": "table"
+}

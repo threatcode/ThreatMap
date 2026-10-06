@@ -1,0 +1,278 @@
+import type { RequestFull } from "./request";
+import type { ResponseFull } from "./response";
+import { type ButtonSlotContent, type CommandSlotContent, type CustomSlotContent, type SlotContentProps, type SlotContentPropsGroup } from "./slots";
+import { type AddIndicatorOptions, type ID, type Selection } from "./utils";
+/**
+ * The connection information to use for the request.
+ * @category Replay
+ */
+type ConnectionInfo = {
+    /**
+     * The host to use for the request.
+     */
+    host: string;
+    /**
+     * The port to use for the request.
+     */
+    port: number;
+    /**
+     * Whether the request is TLS.
+     */
+    isTLS: boolean;
+    /**
+     * The SNI to use for the request.
+     * If not provided, the SNI will be inferred from the host.
+     */
+    SNI?: string;
+};
+/**
+ * The slots in the Replay UI.
+ * @category Replay
+ */
+export declare const ReplaySlot: {
+    /**
+     * The left side of the session toolbar.
+     */
+    readonly SessionToolbarPrimary: "session-toolbar-primary";
+    /**
+     * The right side of the session toolbar.
+     */
+    readonly SessionToolbarSecondary: "session-toolbar-secondary";
+    /**
+     * The left side of the topbar.
+     */
+    readonly Topbar: "topbar";
+};
+export type ReplaySlot = (typeof ReplaySlot)[keyof typeof ReplaySlot];
+/**
+ * Content that can be added to replay slots.
+ * @category Replay
+ */
+export type ReplaySlotContent<TProps extends SlotContentPropsGroup = SlotContentProps> = {
+    [K in ReplaySlot]: ButtonSlotContent | CustomSlotContent<TProps> | CommandSlotContent;
+};
+/**
+ * Options for opening a tab.
+ * @category Replay
+ */
+export type OpenTabOptions = {
+    /**
+     * Whether to select the tab after opening it.
+     * Defaults to true.
+     */
+    select?: boolean;
+};
+/**
+ * A replay tab.
+ * @category Replay
+ */
+export type ReplayTab = {
+    /**
+     * The ID of the session associated with this tab.
+     */
+    sessionId: ID;
+};
+/**
+ * A session in Replay.
+ * @category Replay
+ */
+export type ReplaySession = {
+    /**
+     * The ID of the session.
+     */
+    id: ID;
+    /**
+     * The name of the session.
+     */
+    name: string;
+    /**
+     * The ID of the collection the session belongs to.
+     */
+    collectionId: ID;
+    /**
+     * The IDs of all entries in this session.
+     */
+    entryIds: ID[];
+};
+/**
+ * A replay entry.
+ * @category Replay
+ */
+export type ReplayEntry = {
+    /**
+     * The ID of the entry.
+     */
+    id: ID;
+    /**
+     * The ID of the session this entry belongs to.
+     */
+    sessionId: ID;
+    /**
+     * The ID of the request associated with this entry, if any.
+     */
+    requestId?: ID;
+};
+/**
+ * The currently selected Replay exchange.
+ * @category Replay
+ */
+export type ReplaySelectedExchange = {
+    kind: typeof ReplaySessionKind.Http;
+    entryId: ID;
+    sessionId: ID;
+    request: RequestFull;
+    response?: ResponseFull;
+} | {
+    kind: typeof ReplaySessionKind.Ws;
+    entryId: ID;
+    sessionId: ID;
+    streamId?: ID;
+    activeTab: "http-upgrade" | "messages";
+    upgradeRequest?: RequestFull;
+    upgradeResponse?: ResponseFull;
+    message?: ReplayWebSocketMessage;
+};
+/**
+ * The currently edited WebSocket message in Replay.
+ * @category Replay
+ */
+export type ReplayWebSocketMessage = {
+    raw: string;
+    direction: "CLIENT" | "SERVER";
+    format: "BINARY" | "CLOSE" | "PING" | "PONG" | "TEXT";
+};
+/**
+ * A collection in Replay.
+ * @category Replay
+ */
+export type ReplayCollection = {
+    /**
+     * The ID of the collection.
+     */
+    id: ID;
+    /**
+     * The name of the collection.
+     */
+    name: string;
+    /**
+     * The sessions in the collection.
+     */
+    sessionIds: ID[];
+};
+/**
+ * Options for sending a request.
+ * @category Replay
+ */
+export type SendRequestOptions = {
+    /**
+     * Whether to send the request in the background without updating the UI.
+     * If true, the request will not update the UI.
+     * If false, the UI will be updated to display the session and the new request.
+     * Defaults to false.
+     */
+    background?: boolean;
+};
+/**
+ * @category Replay
+ *
+ * @remarks
+ * This type is a discriminated union with two possible shapes:
+ * - A raw request, containing the raw HTTP request string and connection information.
+ * - A reference to an existing request ID.
+ *
+ * @example
+ * // Using a raw request
+ * const source: RequestSource = {
+ *   type: "Raw",
+ *   raw: "GET /api/data HTTP/1.1",
+ *   connectionInfo: { ... }
+ * };
+ * // Using an ID
+ * const source: RequestSource = {
+ *   type: "ID",
+ *   id: "request-123"
+ * };
+ */
+export type RequestSource = {
+    type: "Raw";
+    raw: string;
+    connectionInfo: ConnectionInfo;
+} | {
+    type: "ID";
+    id: string;
+};
+/**
+ * Event fired when the current replay session changes.
+ * @category Replay
+ */
+export type CurrentReplaySessionChangeEvent = {
+    /**
+     * The ID of the newly selected session, or undefined if no session is selected.
+     */
+    sessionId: ID | undefined;
+};
+/**
+ * Event fired when a replay session is created.
+ * @category Replay
+ */
+export type ReplaySessionCreatedEvent = {
+    /**
+     * The newly created replay session.
+     */
+    session: ReplaySession;
+};
+/**
+ * Event fired when a replay collection is created.
+ * @category Replay
+ */
+export type ReplayCollectionCreatedEvent = {
+    /**
+     * The newly created replay collection.
+     */
+    collection: ReplayCollection;
+};
+/**
+ * Replay page context.
+ * @category Replay
+ */
+export type ReplayPageContext = {
+    kind: "Replay";
+    selection: Selection<ReplaySessionId>;
+};
+/**
+ * Options for adding an indicator to a replay session.
+ * @category Replay
+ */
+export type AddSessionIndicatorOptions = AddIndicatorOptions & {
+    /**
+     * Includes the indicator icon on the session's replay tab.
+     * @default false
+     */
+    showTabIcon?: boolean;
+};
+/**
+ * Options for adding an indicator to a replay collection.
+ * @category Replay
+ */
+export type AddCollectionIndicatorOptions = AddIndicatorOptions;
+/**
+ * The kind of a replay session.
+ * @category Replay
+ */
+export declare const ReplaySessionKind: {
+    readonly Http: "HTTP";
+    readonly Ws: "WS";
+};
+/**
+ * The kind of a replay session.
+ * @category Replay
+ */
+export type ReplaySessionKind = (typeof ReplaySessionKind)[keyof typeof ReplaySessionKind];
+/**
+ * A unique replay session identifier.
+ * @category Replay
+ */
+type ReplaySessionId = string & {
+    __replaySessionId?: never;
+};
+export {};

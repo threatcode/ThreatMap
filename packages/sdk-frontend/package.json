@@ -1,0 +1,24 @@
+{
+  "name": "@threatmap/sdk-frontend",
+  "version": "0.1.0",
+  "description": "Typing for the Threatmap Frontend SDK",
+  "author": "ThreatCode <dev@khulnasoft.com>",
+  "repository": "https://github.com/threatcode/threatmap/",
+  "license": "MIT",
+  "types": "./src/index.d.ts",
+  "main": "./src/index.js",
+  "module": "./src/index.js",
+  "files": [
+    "src/*"
+  ],
+  "scripts": {
+    "generate:doc": "typedoc"
+  },
+  "peerDependencies": {
+    "@ai-sdk/provider": "^3.0.1",
+    "@codemirror/state": "^6.0.0",
+    "@codemirror/view": "^6.0.0",
+    "vue": "^3.0.0"
+  },
+  "peerDependenciesMeta": {}
+}

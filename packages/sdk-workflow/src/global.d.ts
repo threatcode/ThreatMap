@@ -1,0 +1,60 @@
+import {
+  Body as _Body,
+  Bytes as _Bytes,
+  Finding as _Finding,
+  FindingSpec as _FindingSpec,
+  FindingsSDK as _FindingsSDK,
+  ID as _ID,
+  MaybePromise as _MaybePromise,
+  Request as _Request,
+  RequestResponse as _RequestResponse,
+  RequestSpec as _RequestSpec,
+  RequestSpecRaw as _RequestSpecRaw,
+  RequestsSDK as _RequestsSDK,
+  Response as _Response,
+} from "threatmap:utils";
+import {
+  BytesInput as _BytesInput,
+  ConvertInput as _ConvertInput,
+  Data as _Data,
+  Decision as _Decision,
+  HttpInput as _HttpInput,
+  NodeInput as _NodeInput,
+  NodeInputHTTP as _NodeInputHTTP,
+  NodeResult as _NodeResult,
+  PassiveInput as _PassiveInput,
+  SDK as _SDK,
+} from "threatmap:workflow";
+
+declare global {
+  //@ts-expect-error TS2666
+  export {
+    _Body as Body,
+    _Request as Request,
+    _RequestSpec as RequestSpec,
+    _RequestSpecRaw as RequestSpecRaw,
+    _Response as Response,
+    _RequestResponse as RequestResponse,
+    _Finding as Finding,
+    _FindingSpec as FindingSpec,
+    _ID as ID,
+    _Bytes as Bytes,
+    _MaybePromise as MaybePromise,
+    _RequestsSDK as RequestsSDK,
+    _FindingsSDK as FindingsSDK,
+  };
+
+  //@ts-expect-error TS2666
+  export {
+    _HttpInput as HttpInput,
+    _PassiveInput as PassiveInput,
+    _BytesInput as BytesInput,
+    _ConvertInput as ConvertInput,
+    _Data as Data,
+    _Decision as Decision,
+    _NodeInput as NodeInput,
+    _NodeResult as NodeResult,
+    _NodeInputHTTP as NodeInputHTTP,
+    _SDK as SDK,
+  };
+}

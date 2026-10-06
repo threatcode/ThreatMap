@@ -1,0 +1,262 @@
+import { AuthManager } from "@/auth/index.js";
+import { InstanceNotReadyError } from "@/errors/index.js";
+import { GraphQLClient } from "@/graphql/index.js";
+import { ConsoleLogger } from "@/logger.js";
+import type { ClientOptions } from "@/options.js";
+import { RestClient } from "@/rest/index.js";
+import {
+  DNSRewriteSDK,
+  DNSUpstreamSDK,
+  EnvironmentSDK,
+  FilterSDK,
+  FindingSDK,
+  HostedFileSDK,
+  InstanceSDK,
+  PluginSDK,
+  ProjectSDK,
+  ReplaySDK,
+  RequestSDK,
+  ScopeSDK,
+  TaskSDK,
+  UserSDK,
+  WorkflowSDK,
+} from "@/sdks/index.js";
+import {
+  type ConnectOptions,
+  type Health,
+  healthSchema,
+  type ReadyOptions,
+} from "@/types/index.js";
+import { sleep } from "@/utils/misc.js";
+import { Version } from "@/version.js";
+
+/**
+ * Threatmap client for interacting with a Threatmap instance.
+ *
+ * Provides access to:
+ * - `graphql` - Low-level GraphQL client (execute queries/mutations, subscribe)
+ * - `rest` - Low-level REST client (GET, POST)
+ * - `version` - Instance version handle (lazy `/health` or seeded)
+ * - `user` - Higher-level user SDK
+ * - `plugin` - Higher-level plugin SDK
+ * - `project` - Higher-level project SDK
+ * - `scope` - Higher-level scope SDK
+ * - `filter` - Higher-level filter preset SDK
+ * - `environment` - Higher-level environment SDK
+ * - `dnsUpstream` - Higher-level DNS upstream SDK
+ * - `dnsRewrite` - Higher-level DNS rewrite SDK
+ * - `hostedFile` - Higher-level hosted file SDK
+ * - `instance` - Higher-level instance SDK
+ * - `request` - Higher-level request SDK
+ * - `workflow` - Higher-level workflow SDK
+ *
+ * @example
+ * ```typescript
+ * // Authenticate with a PAT
+ * const client = new Threatmap({
+ *   url: "http://localhost:8080",
+ *   auth: { pat: "threatmap_xxxxx" },
+ * });
+ * await client.connect();
+ *
+ * const viewer = await client.user.viewer();
+ * ```
+ */
+export class Client {
+  /** Low-level GraphQL client for executing queries, mutations, and subscriptions. */
+  readonly graphql: GraphQLClient;
+
+  /** Low-level REST client for making HTTP requests. */
+  readonly rest: RestClient;
+
+  /** Instance version handle. Resolves lazily via `/health` unless seeded. */
+  readonly version: Version;
+
+  /** Higher-level user SDK. */
+  readonly user: UserSDK;
+
+  /** Higher-level plugin SDK. */
+  readonly plugin: PluginSDK;
+
+  /** Higher-level project SDK. */
+  readonly project: ProjectSDK;
+
+  /** Higher-level scope SDK. */
+  readonly scope: ScopeSDK;
+
+  /** Higher-level filter preset SDK. */
+  readonly filter: FilterSDK;
+
+  /** Higher-level environment SDK. */
+  readonly environment: EnvironmentSDK;
+
+  /** Higher-level DNS upstream SDK. */
+  readonly dnsUpstream: DNSUpstreamSDK;
+
+  /** Higher-level DNS rewrite SDK. */
+  readonly dnsRewrite: DNSRewriteSDK;
+
+  /** Higher-level hosted file SDK. */
+  readonly hostedFile: HostedFileSDK;
+
+  /** Higher-level instance SDK. */
+  readonly instance: InstanceSDK;
+
+  /** Higher-level finding SDK. */
+  readonly finding: FindingSDK;
+
+  /** Higher-level request SDK. */
+  readonly request: RequestSDK;
+
+  /** Higher-level workflow SDK. */
+  readonly workflow: WorkflowSDK;
+
+  /** Higher-level task SDK. */
+  readonly task: TaskSDK;
+
+  /** Higher-level replay SDK. */
+  readonly replay: ReplaySDK;
+
+  private readonly auth: AuthManager;
+
+  constructor(options: ClientOptions) {
+    const logger = options.logger ?? new ConsoleLogger();
+
+    this.auth = new AuthManager(
+      options.url,
+      logger,
+      options.auth,
+      options.request,
+    );
+
+    this.graphql = new GraphQLClient(
+      options.url,
+      this.auth,
+      logger,
+      options.request,
+    );
+
+    this.rest = new RestClient(options.url, this.auth, logger, options.request);
+
+    this.version = options.version ?? Version.lazy(this.rest);
+
+    this.user = new UserSDK(this.graphql);
+    this.plugin = new PluginSDK(this.graphql, this.rest);
+    this.project = new ProjectSDK(this.graphql);
+    this.scope = new ScopeSDK(this.graphql);
+    this.filter = new FilterSDK(this.graphql);
+    this.environment = new EnvironmentSDK(this.graphql);
+    this.dnsUpstream = new DNSUpstreamSDK(this.graphql);
+    this.dnsRewrite = new DNSRewriteSDK(this.graphql);
+    this.hostedFile = new HostedFileSDK(this.graphql);
+    this.instance = new InstanceSDK(this.graphql);
+    this.finding = new FindingSDK(this.graphql);
+    this.request = new RequestSDK(this.graphql);
+    this.workflow = new WorkflowSDK(this.graphql);
+    this.task = new TaskSDK(this.graphql);
+    this.replay = new ReplaySDK(this.graphql, this.version);
+  }
+
+  /**
+   * Connect to the Threatmap instance and perform authentication.
+   *
+   * This must be called before making any API requests.
+   * It will:
+   * - Load cached tokens if caching is enabled
+   * - Perform PAT-based or browser-based authentication if needed
+   * - Store the resulting tokens
+   * - Optionally wait for the instance to be ready
+   *
+   * @example
+   * ```typescript
+   * // Default: authenticate and wait for ready with default options
+   * await client.connect();
+   *
+   * // Skip ready check
+   * await client.connect({ ready: false });
+   * ```
+   */
+  async connect(options?: ConnectOptions): Promise<void> {
+    // Wait for the instance to be ready
+    const readyOption = options?.ready ?? true;
+    if (readyOption !== false) {
+      await this.ready(
+        typeof readyOption === "object" ? readyOption : undefined,
+      );
+    }
+
+    // Authenticate
+    await this.auth.authenticate();
+  }
+
+  /**
+   * Check the health status of the Threatmap instance.
+   *
+   * Pings the `/health` endpoint and returns instance metadata.
+   *
+   * @returns Instance health metadata including name, version, and ready status
+   *
+   * @example
+   * ```typescript
+   * const health = await client.health();
+   * console.log(health.name); // "threatmap"
+   * console.log(health.version); // "0.55.3"
+   * console.log(health.ready); // true
+   * ```
+   */
+  async health(): Promise<Health> {
+    const response = await this.rest.get<unknown>("/health");
+    return healthSchema.parse(response);
+  }
+
+  /**
+   * Wait for the Threatmap instance to be ready.
+   *
+   * @param options - Optional configuration for polling behavior
+   * @returns Promise that resolves when the instance is ready
+   * @throws Error if the instance is not ready within the specified timeout or retries
+   *
+   * @example
+   * ```typescript
+   * // Use default options
+   * await client.ready();
+   *
+   * // Custom options
+   * await client.ready({
+   *   interval: 1000,  // Check every 1 second
+   *   retries: 10,      // Try up to 10 times
+   *   timeout: 10000,  // Overall timeout of 10 seconds
+   * });
+   * ```
+   */
+  async ready(options?: ReadyOptions): Promise<void> {
+    const interval = options?.interval ?? 5000;
+    const maxRetries = options?.retries ?? 5;
+    const timeout = options?.timeout ?? 5000;
+
+    let attempts = 0;
+
+    const checkHealth = async (): Promise<boolean> => {
+      try {
+        const response = await this.rest.get<unknown>("/health", { timeout });
+        return healthSchema.parse(response).ready;
+      } catch {
+        return false;
+      }
+    };
+
+    while (attempts < maxRetries) {
+      const isReady = await checkHealth();
+      if (isReady) {
+        return;
+      }
+
+      attempts++;
+      if (attempts < maxRetries) {
+        await sleep(interval);
+      }
+    }
+
+    throw new InstanceNotReadyError(maxRetries);
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "@threatmap/sdk-backend",
+  "version": "0.1.0",
+  "description": "Typing for the Threatmap Backend SDK",
+  "author": "ThreatCode <dev@khulnasoft.com>",
+  "repository": "https://github.com/threatcode/threatmap/",
+  "license": "MIT",
+  "types": "./src/index.d.ts",
+  "files": [
+    "src/*"
+  ],
+  "scripts": {
+    "build": "echo 'No build step required for @threatmap/sdk-backend'",
+    "typecheck": "tsc --noEmit",
+    "generate:doc": "typedoc"
+  },
+  "dependencies": {
+    "@threatmap/quickjs-types": "workspace:*",
+    "@threatmap/sdk-shared": "workspace:*"
+  }
+}

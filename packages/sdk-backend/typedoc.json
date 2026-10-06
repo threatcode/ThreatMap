@@ -1,0 +1,17 @@
+{
+  "extends": ["../../typedoc.base.json"],
+  "entryPoints": ["src/typing.d.ts"],
+  "externalPattern": ["**/node_modules/typescript/**"],
+  "categoryOrder": [
+    "SDK",
+    "Meta",
+    "API",
+    "Events",
+    "Requests",
+    "Findings",
+    "Replay",
+    "Projects",
+    "Shared",
+    "*"
+  ]
+}

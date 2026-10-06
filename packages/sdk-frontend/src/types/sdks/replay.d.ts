@@ -1,0 +1,317 @@
+import { type Extension } from "@codemirror/state";
+import { type AddCollectionIndicatorOptions, type AddSessionIndicatorOptions, type CurrentReplaySessionChangeEvent, type OpenTabOptions, type ReplayCollection, type ReplayCollectionCreatedEvent, type ReplayEntry, type ReplaySelectedExchange, type ReplaySession, type ReplaySessionCreatedEvent, type ReplaySessionKind, type ReplaySlotContent, type ReplayTab, type RequestSource, type SendRequestOptions } from "../types/replay";
+import type { RequestFull, RequestViewModeOptions, RequestWritableViewModeProps } from "../types/request";
+import type { ResponseFull, ResponseViewModeOptions, ResponseViewModeProps } from "../types/response";
+import { type DefineAddToSlotFn } from "../types/slots";
+import type { ID, Indicator, ListenerHandle } from "../types/utils";
+import type { MessageViewModeOptions, MessageViewModeProps } from "../types/websocket";
+/**
+ * Utilities to interact with Replay.
+ * @category Replay
+ */
+export type ReplaySDK = {
+    /**
+     * Open a replay tab for the given session.
+     * @param sessionId The ID of the session to open.
+     * @param options The options for opening the tab.
+     */
+    openTab: (sessionId: ID, options?: OpenTabOptions) => void;
+    /**
+     * Close a replay tab for the given session.
+     * @param sessionId The ID of the session to close.
+     */
+    closeTab: (sessionId: ID) => void;
+    /**
+     * Get the list of all open replay tabs.
+     * @returns The list of all open replay tabs.
+     */
+    getTabs: () => ReplayTab[];
+    /**
+     * Get the list of all replay sessions.
+     * @param options The options for getting the sessions.
+     * @param options.collectionId The ID of the collection to get the sessions for.
+     * @returns The list of all replay sessions.
+     */
+    getSessions: (options?: {
+        collectionId?: ID;
+    }) => ReplaySession[];
+    /**
+     * Get the currently selected replay session.
+     * @returns The currently selected replay session, or undefined if no session is selected.
+     * @example
+     * ```ts
+     * const currentSession = sdk.replay.getCurrentSession();
+     * if (currentSession) {
+     *   console.log(`Current session: ${currentSession.name}`);
+     * } else {
+     *   console.log("No session is currently selected");
+     * }
+     * ```
+     */
+    getCurrentSession: () => ReplaySession | undefined;
+    /**
+     * Get the entry currently displayed in the active replay session.
+     * @returns The active entry, or undefined if no entry is currently loaded.
+     * @example
+     * ```ts
+     * const currentEntry = sdk.replay.getCurrentEntry();
+     * if (currentEntry) {
+     *   console.log(`Currently viewing entry ${currentEntry.id}`);
+     * } else {
+     *   console.log("No entry is currently displayed");
+     * }
+     * ```
+     */
+    getCurrentEntry: () => ReplayEntry | undefined;
+    /**
+     * Get the currently selected Replay exchange.
+     * @returns The currently selected Replay exchange.
+     */
+    getSelectedExchange: () => ReplaySelectedExchange | undefined;
+    /**
+     * Get the currently selected request.
+     * @returns The currently selected request.
+     */
+    getSelectedRequest: () => RequestFull | undefined;
+    /**
+     * Get the currently selected response.
+     * @returns The currently selected response.
+     */
+    getSelectedResponse: () => ResponseFull | undefined;
+    /**
+     * Rename a session.
+     * @param id The ID of the session to rename.
+     * @param name The new name of the session.
+     * @returns The updated session.
+     */
+    renameSession: (id: ID, name: string) => Promise<ReplaySession>;
+    /**
+     * Move a session to a different collection.
+     * @param sessionId The ID of the session to move.
+     * @param collectionId The ID of the collection to move the session to.
+     * @returns The updated session.
+     */
+    moveSession: (sessionId: ID, collectionId: ID) => Promise<ReplaySession>;
+    /**
+     * Delete a session.
+     * @param sessionIds The IDs of the sessions to delete.
+     */
+    deleteSessions: (sessionIds: ID[]) => Promise<ID[]>;
+    /**
+     * Create a session.
+     * @param source The source of the session to create.
+     * @param collectionId The ID of the collection to add the session to.
+     * @example
+     * ```ts
+     * sdk.replay.createSession({
+     *   type: "Raw",
+     *   raw: "GET / HTTP/1.1\r\nHost: example.com\r\n\r\n",
+     *   connectionInfo: {
+     *     host: "example.com",
+     *     port: 443,
+     *     isTLS: true,
+     *   },
+     * });
+     * ```
+     */
+    createSession: (source: RequestSource, collectionId?: ID, sessionKind?: ReplaySessionKind) => Promise<ReplaySession>;
+    /**
+     * Get the list of all replay collections.
+     * @returns The list of all replay collections.
+     */
+    getCollections: () => ReplayCollection[];
+    /**
+     * Create a new collection.
+     * @param name The name of the collection to create.
+     */
+    createCollection: (name: string) => Promise<ReplayCollection>;
+    /**
+     * Rename a collection.
+     * @param id The ID of the collection to rename.
+     * @param name The new name of the collection.
+     * @returns The updated collection.
+     */
+    renameCollection: (id: ID, name: string) => Promise<ReplayCollection>;
+    /**
+     * Delete a collection.
+     * @param id The ID of the collection to delete.
+     * @returns Whether the collection was deleted.
+     */
+    deleteCollection: (id: ID) => Promise<boolean>;
+    /**
+     * Add a component to a slot.
+     * @param slot The slot to add the component to.
+     * @param content The content to add to the slot.
+     * @returns A handle object with a `remove` method to remove the content from the slot.
+     * @example
+     * ```ts
+     * const command = sdk.replay.addToSlot(ReplaySlot.SessionToolbarPrimary, {
+     *   type: "Command",
+     *   commandId: "my-command",
+     *   icon: "my-icon",
+     * });
+     *
+     * const custom = sdk.replay.addToSlot(ReplaySlot.SessionToolbarSecondary, {
+     *   type: "Custom",
+     *   definition: MyComponent,
+     * });
+     *
+     * const button = sdk.replay.addToSlot(ReplaySlot.Topbar, {
+     *   type: "Button",
+     *   label: "Hello",
+     *   icon: "fas fa-user",
+     *   onClick: () => {},
+     * });
+     *
+     * // Later, remove the content
+     * button.remove();
+     * ```
+     */
+    addToSlot: DefineAddToSlotFn<ReplaySlotContent>;
+    /**
+     * Add an extension to the request editor.
+     * @param extension The extension to add.
+     */
+    addRequestEditorExtension: (extension: Extension) => void;
+    /**
+     * Add a custom view mode for requests.
+     * @param options The view mode options.
+     */
+    addRequestViewMode: (options: RequestViewModeOptions<RequestWritableViewModeProps>) => void;
+    /**
+     * Add a custom response view mode.
+     * @param options The view mode options.
+     */
+    addResponseViewMode: (options: ResponseViewModeOptions<ResponseViewModeProps>) => void;
+    /**
+     * Add a custom WebSocket message view mode.
+     * @param options The view mode options.
+     */
+    addWebsocketMessageViewMode: (options: MessageViewModeOptions<MessageViewModeProps>) => void;
+    /**
+     * Send a request to the Replay backend.
+     * @param request The request to send.
+     * @param options The options for sending the request.
+     * @example
+     * ```ts
+     * sendRequest(sessionId, {
+     *   connectionInfo: {
+     *     SNI: "example.com",
+     *     host: "example.com",
+     *     isTLS: true,
+     *     port: 443,
+     *   },
+     *   raw: "GET / HTTP/1.1\r\nHost: example.com\r\n\r\n",
+     *   updateContentLength: false,
+     * });
+     * ```
+     */
+    sendRequest: (sessionId: ID, options: SendRequestOptions) => Promise<void>;
+    /**
+     * Show a specific entry in a replay session.
+     * This will open the session tab if not already open, set it as the selected session, and display the specified entry.
+     * @param sessionId The ID of the session containing the entry.
+     * @param entryId The ID of the entry to show.
+     * @example
+     * ```ts
+     * await sdk.replay.showEntry(sessionId, entryId);
+     * ```
+     */
+    showEntry: (sessionId: ID, entryId: ID) => Promise<void>;
+    /**
+     * Get a replay entry by its ID.
+     * @param entryId The ID of the entry to get.
+     * @returns The replay entry.
+     * @example
+     * ```ts
+     * const entry = await sdk.replay.getEntry(entryId);
+     * console.log(entry.id, entry.sessionId, entry.requestId);
+     * ```
+     */
+    getEntry: (entryId: ID) => ReplayEntry;
+    /**
+     * Subscribe to current replay session changes.
+     * @param callback The callback to call when the selected session changes.
+     * @returns An object with a `stop` method that can be called to stop listening to session changes.
+     *
+     * @example
+     * ```ts
+     * const handler = sdk.replay.onCurrentSessionChange((event) => {
+     *   console.log(`Session ${event.sessionId} got selected!`);
+     * });
+     *
+     * // Later, stop listening
+     * handler.stop();
+     * ```
+     */
+    onCurrentSessionChange: (callback: (event: CurrentReplaySessionChangeEvent) => void) => ListenerHandle;
+    /**
+     * Subscribe to replay session creation events.
+     * @param callback The callback to call when a session is created.
+     * @returns An object with a `stop` method that can be called to stop listening to session creation events.
+     *
+     * @example
+     * ```ts
+     * const handler = sdk.replay.onSessionCreate((event) => {
+     *   console.log(`Session ${event.session.id} was created!`);
+     * });
+     *
+     * // Later, stop listening
+     * handler.stop();
+     * ```
+     */
+    onSessionCreate: (callback: (event: ReplaySessionCreatedEvent) => void) => ListenerHandle;
+    /**
+     * Subscribe to replay collection creation events.
+     * @param callback The callback to call when a collection is created.
+     * @returns An object with a `stop` method that can be called to stop listening to collection creation events.
+     *
+     * @example
+     * ```ts
+     * const handler = sdk.replay.onCollectionCreate((event) => {
+     *   console.log(`Collection ${event.collection.id} was created!`);
+     * });
+     *
+     * // Later, stop listening
+     * handler.stop();
+     * ```
+     */
+    onCollectionCreate: (callback: (event: ReplayCollectionCreatedEvent) => void) => ListenerHandle;
+    /**
+     * Add an indicator to a replay session.
+     * Indicators are displayed next to the session name in the collections tree.
+     * @param sessionId The ID of the session to add the indicator to.
+     * @param indicator The indicator configuration.
+     * @returns A handle object with a `remove` method to remove the indicator.
+     * @example
+     *
+     * const indicator = sdk.replay.addSessionIndicator(sessionId, {
+     *   icon: "fas fa-exclamation-triangle",
+     *   description: "Security warning",
+     *   showTabIcon: true,
+     * });
+     *
+     * // Later, remove the indicator
+     * indicator.remove();
+     *
+     */
+    addSessionIndicator: (sessionId: ID, indicator: AddSessionIndicatorOptions) => Indicator;
+    /**
+     * Add an indicator to a replay collection.
+     * Indicators are displayed next to the collection name in the collections tree.
+     * @param collectionId The ID of the collection to add the indicator to.
+     * @param indicator The indicator configuration.
+     * @returns A handle object with a `remove` method to remove the indicator.
+     * @example
+     *
+     * const indicator = sdk.replay.addCollectionIndicator(collectionId, {
+     *   icon: "fas fa-folder-open",
+     *   description: "Has unresolved findings",
+     * });
+     *
+     * // Later, remove the indicator
+     * indicator.remove();
+     *
+     */
+    addCollectionIndicator: (collectionId: ID, indicator: AddCollectionIndicatorOptions) => Indicator;
+};

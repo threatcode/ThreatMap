@@ -1,0 +1,20 @@
+{
+  "name": "@threatmap/sdk-workflow",
+  "version": "0.1.0",
+  "description": "Typing for the Threatmap Workflow SDK",
+  "author": "ThreatCode <dev@khulnasoft.com>",
+  "repository": "https://github.com/threatcode/threatmap/",
+  "license": "MIT",
+  "types": "./src/index.d.ts",
+  "files": [
+    "src/*"
+  ],
+  "scripts": {
+    "build": "echo 'No build step required for @threatmap/sdk-workflow'",
+    "typecheck": "tsc --noEmit",
+    "generate:doc": "typedoc"
+  },
+  "dependencies": {
+    "@threatmap/quickjs-types": "workspace:*"
+  }
+}

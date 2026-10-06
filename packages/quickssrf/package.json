@@ -1,0 +1,29 @@
+{
+  "name": "@threatmap/quickssrf",
+  "version": "0.1.0",
+  "description": "Specification for the QuickSSRF plugin",
+  "author": "ThreatCode <dev@khulnasoft.com>",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "prepare": "pnpm run build",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@threatmap/sdk-shared": "workspace:*",
+    "zod": "4.3.6"
+  }
+}

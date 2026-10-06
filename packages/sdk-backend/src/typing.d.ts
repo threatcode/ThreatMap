@@ -1,0 +1,283 @@
+declare module "threatmap:plugin" {
+  import type { Database } from "sqlite";
+  import type {
+    Connection,
+    EnvironmentSDK,
+    FindingsSDK,
+    GraphQLSDK,
+    HostedFileSDK,
+    MaybePromise,
+    NetSDK,
+    Project,
+    ProjectsSDK,
+    ReplaySDK,
+    Request,
+    RequestSpec,
+    RequestSpecRaw,
+    RequestsSDK,
+    Response,
+    RuntimeSDK,
+    ScopeSDK,
+  } from "threatmap:utils";
+
+  type MaybePromise<T> = T | Promise<T>;
+
+  type AnyFn = (...args: any[]) => MaybePromise<any>;
+  type InvalidCallbackMessage =
+    "Your callback must respect the format (sdk: SDK, ...args: unknown[]) => MaybePromise<unknown>";
+  type ResolvedAPI<T> = T extends { api: infer A } ? A : T;
+  type APICallback<T> = T extends AnyFn
+    ? (sdk: SDK, ...args: Parameters<T>) => ReturnType<T>
+    : InvalidCallbackMessage;
+
+  type AnyVoidFn = (...args: any[]) => MaybePromise<void>;
+  type ResolvedEvents<T, Events> = T extends { events: infer A } ? A : Events;
+  type InvalidEventParametersMessage = "Invalid event parameters";
+  type EventParameters<T> = T extends AnyVoidFn
+    ? A
+    : InvalidEventParametersMessage;
+
+  /**
+   * The SDK for the API RPC service.
+   * @category API
+   */
+  export type APISDK<SpecOrAPI = {}, Events = {}> = {
+    /**
+     * Sends an event to the frontend plugin.
+     *
+     * @example
+     * ```ts
+     * sdk.api.send("myEvent", 5, "hello");
+     * ```
+     */
+    send<K extends keyof ResolvedEvents<SpecOrAPI, Events>>(
+      event: K,
+      ...args: EventParameters<ResolvedEvents<SpecOrAPI, Events>[K]>
+    ): void;
+
+    /**
+     * Registers a new backend function for the RPC.
+     *
+     * @example
+     * ```ts
+     * sdk.api.register("multiply", (sdk: SDK, a: number, b: number) => {
+     *    return a * b;
+     * });
+     * ```
+     */
+    register<K extends keyof ResolvedAPI<SpecOrAPI>>(
+      name: K,
+      callback: APICallback<ResolvedAPI<SpecOrAPI>[K]>,
+    ): void;
+  };
+
+  /**
+   * The result of an upstream callback.
+   * @category Events
+   */
+  export type UpstreamResult =
+    | Connection
+    | RequestSpec
+    | {
+        connection?: Connection;
+        request?: RequestSpec;
+      }
+    | undefined;
+
+  /**
+   * The SDK for the API RPC service.
+   * @category Events
+   */
+  export type EventsSDK<API = {}, Events = {}> = {
+    /**
+     * Registers an callback on new intercepted requests.
+     *
+     * This callback is called asynchronously and cannot modify requests.
+     *
+     * @example
+     * ```ts
+     * sdk.events.onInterceptRequest((sdk, request) => {
+     *    // Do something with the request
+     * });
+     * ```
+     */
+    onInterceptRequest(
+      callback: (sdk: SDK<API, Events>, request: Request) => MaybePromise<void>,
+    ): void;
+
+    /**
+     * Registers an callback on new intercepted responses.
+     *
+     * This callback is called asynchronously and cannot modify responses.
+     *
+     * @example
+     * ```ts
+     * sdk.events.onInterceptResponse((sdk, request, response) => {
+     *    // Do something with the request/response
+     * });
+     * ```
+     */
+    onInterceptResponse(
+      callback: (
+        sdk: SDK<API, Events>,
+        request: Request,
+        response: Response,
+      ) => MaybePromise<void>,
+    ): void;
+
+    /**
+     * Registers an callback on project change.
+     *
+     * This callback is called asynchronously and cannot modify the project.
+     *
+     * It can happen that the project is null if the user deleted the currently selected one.
+     *
+     * @example
+     * ```ts
+     * sdk.events.onProjectChange((sdk, project) => {
+     *   if (project !== null) {
+     *     // Do something with the project
+     *   }
+     * });
+     * ```
+     */
+    onProjectChange(
+      callback: (
+        sdk: SDK<API, Events>,
+        project: Project | null,
+      ) => MaybePromise<void>,
+    ): void;
+
+    /**
+     * Callback called before the request is sent to the target.
+     *
+     * This callback is called synchronously so special care should be taken
+     * to not impact overall performance.
+     *
+     * The callback can return a `Connection` that will then be used to send the request.
+     * It can also return a `RequestSpec` to override the request sent to the target.
+     *
+     * This will only be called if the user has enabled it for a given domain
+     * in the settings for Upstream Plugins.
+     *
+     * @example
+     * ```ts
+     * sdk.events.onUpstream(async (sdk, request) => {
+     *    // Send all requests to example.com
+     *    return {
+     *      connection: await sdk.net.connect("https://example.com"),
+     *    };
+     * });
+     * ```
+     */
+    onUpstream(
+      callback: (
+        sdk: SDK<API, Events>,
+        request: RequestSpecRaw,
+      ) => MaybePromise<UpstreamResult>,
+    ): void;
+  };
+
+  /**
+   * The SDK for metadata information about the plugin.
+   * @category Meta
+   */
+  export type MetaSDK = {
+    /**
+     * The id of the plugin.
+     */
+    id(): string;
+    /**
+     * The directory of the plugin in Threatmap Data.
+     * You can store data related to your plugin in this directory.
+     */
+    path(): string;
+    /**
+     * The directory of the plugin's assets in Threatmap Data.
+     * You can read static data from your plugin in this directory.
+     * You shouldn't write anything there, as the contents can be reset at any time.
+     */
+    assetsPath(): string;
+    /**
+     * Get a sqlite database for the plugin stored in Threatmap Data.
+     * You can use this to store data related to your plugin.
+     */
+    db(): Promise<Database>;
+    /**
+     * Get the version of the plugin.
+     * This uses the semver format.
+     */
+    version(): string;
+    /**
+     * Check if an update is available for the plugin.
+     *
+     * @throws If Threatmap Cloud is offline.
+     */
+    updateAvailable(): Promise<boolean>;
+  };
+
+  /**
+   * The SDK object available to all scripts.
+   * @category SDK
+   */
+  export interface SDK<API = {}, Events = {}> {
+    /**
+     * The console.
+     *
+     * This is currently the same as the global `console`.
+     */
+    console: Console;
+    /**
+     * The SDK for the Findings service.
+     */
+    findings: FindingsSDK;
+    /**
+     * The SDK for the Requests service.
+     */
+    requests: RequestsSDK;
+    /**
+     * The SDK for the Replay service.
+     */
+    replay: ReplaySDK;
+    /**
+     * The SDK for the Projects service.
+     */
+    projects: ProjectsSDK;
+    /**
+     * The SDK for the Scope service.
+     */
+    scope: ScopeSDK;
+    /**
+     * The SDK for the Environment service.
+     */
+    env: EnvironmentSDK;
+    /**
+     * The SDK for the API RPC service.
+     */
+    api: APISDK<API, Events>;
+    /**
+     * The SDK for the Events service.
+     */
+    events: EventsSDK<API, Events>;
+    /**
+     * The SDK for metadata information about the plugin.
+     */
+    meta: MetaSDK;
+    /**
+     * The SDK for the runtime information.
+     */
+    runtime: RuntimeSDK;
+    /**
+     * The SDK for the GraphQL service.
+     */
+    graphql: GraphQLSDK;
+    /**
+     * The SDK for the HostedFile service.
+     */
+    hostedFile: HostedFileSDK;
+    /**
+     * The SDK for the Net service.
+     */
+    net: NetSDK;
+  }
+}
