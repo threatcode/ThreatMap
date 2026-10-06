@@ -1,0 +1,33 @@
+{
+  "name": "@threatmap/scanner",
+  "version": "0.0.0",
+  "description": "Specification for the ThreatMap Scanner plugin",
+  "author": "ThreatCode",
+  "repository": "https://github.com/threatcode/threatmap",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "prepare": "pnpm run build",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@threatmap/sdk-shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@threatmap/sdk-backend": "workspace:*",
+    "tsdown": "^0.21.7"
+  }
+}
