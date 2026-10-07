@@ -10,6 +10,16 @@ This is the monorepo for all the JS SDK and related tooling of Threatmap. It con
 - `quickjs-types`: Typing for the QuickJS Engine
 - `server-auth`: Client to authenticate with a Threatmap Instance
 
+## Creating a new plugin
+
+Run `pnpm --filter @threatmap/create-plugin build` once, then:
+
+```sh
+node tools/create-plugin/dist/index.mjs
+```
+
+and follow the prompts. The scaffolder creates a plugin package (by default under `packages/plugins/`) matching the monorepo conventions.
+
 ## Release automation
 
 SDK releases are not published from branch pushes. The three product-coupled packages (sdk-backend, sdk-frontend, sdk-workflow) are versioned together on `release/vX.Y.Z` branches. Publishing an immutable `vX.Y.Z[-rc.N]` GitHub Release triggers separate npm and GitHub Packages workflows. Both publishers require the release branch tip to match the tag; wait for both to finish before advancing that branch.

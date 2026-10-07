@@ -5,6 +5,7 @@
     "lint": "eslint \"packages/**/src/**/*.{ts,vue,js}\" --fix",
     "typecheck": "pnpm -r typecheck",
     "knip": "knip",
+    "create-plugin": "node tools/create-plugin/dist/index.mjs",
     "generate:doc": "pnpm -r generate:doc"
   },
   "engines": {

@@ -1,0 +1,25 @@
+{
+  "name": "@threatmap/burp2threatmap",
+  "version": "0.1.0",
+  "description": "Migrate Burp Suite HTTP history into ThreatMap",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "burp2threatmap": "./dist/index.mjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "tsdown": "0.20.1",
+    "typescript": "5.6.2"
+  }
+}

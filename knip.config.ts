@@ -4,6 +4,7 @@ const config: KnipConfig = {
   ignore: [
     "scripts/**",
     "package.json",
+    "tools/create-plugin/templates/**",
     ".github/**",
     "**/typedoc.json",
     "packages/sdk/sdk-frontend/**",

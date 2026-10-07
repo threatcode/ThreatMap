@@ -1,5 +1,5 @@
 [plugins]
-toolshed = "https://github.com/threatcode/mise-toolshed"
+toolshed = "https://github.com/threatcode/threatmap"
 
 [tools]
 node = "24.11.1"

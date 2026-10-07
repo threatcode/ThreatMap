@@ -46,6 +46,48 @@ importers:
         specifier: 0.21.7
         version: 0.21.7(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(oxc-resolver@11.24.2)(typescript@5.6.2)
 
+  packages/plugins/chatio:
+    dependencies:
+      '@threatmap/sdk-shared':
+        specifier: workspace:*
+        version: link:../../sdk/sdk-shared
+      zod:
+        specifier: 4.3.6
+        version: 4.3.6
+    devDependencies:
+      tsdown:
+        specifier: 0.20.1
+        version: 0.20.1(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(oxc-resolver@11.24.2)(typescript@5.6.2)
+
+  packages/plugins/compare:
+    dependencies:
+      '@threatmap/sdk-shared':
+        specifier: workspace:*
+        version: link:../../sdk/sdk-shared
+      zod:
+        specifier: 4.3.6
+        version: 4.3.6
+    devDependencies:
+      tsdown:
+        specifier: 0.20.1
+        version: 0.20.1(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(oxc-resolver@11.24.2)(typescript@5.6.2)
+
+  packages/plugins/paramfinder:
+    dependencies:
+      '@threatmap/sdk-shared':
+        specifier: workspace:*
+        version: link:../../sdk/sdk-shared
+      zod:
+        specifier: 4.3.6
+        version: 4.3.6
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.2
+        version: 22.10.2
+      tsdown:
+        specifier: 0.20.1
+        version: 0.20.1(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(oxc-resolver@11.24.2)(typescript@5.6.2)
+
   packages/plugins/quickssrf:
     dependencies:
       '@threatmap/sdk-shared':
@@ -54,6 +96,22 @@ importers:
       zod:
         specifier: 4.3.6
         version: 4.3.6
+
+  packages/plugins/saml-raider:
+    dependencies:
+      '@threatmap/sdk-shared':
+        specifier: workspace:*
+        version: link:../../sdk/sdk-shared
+      zod:
+        specifier: 4.3.6
+        version: 4.3.6
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.2
+        version: 22.10.2
+      tsdown:
+        specifier: 0.20.1
+        version: 0.20.1(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(oxc-resolver@11.24.2)(typescript@5.6.2)
 
   packages/plugins/scanner:
     dependencies:
@@ -67,6 +125,45 @@ importers:
       tsdown:
         specifier: ^0.21.7
         version: 0.21.10(oxc-resolver@11.24.2)(typescript@5.6.2)
+
+  packages/plugins/shift:
+    dependencies:
+      '@threatmap/sdk-shared':
+        specifier: workspace:*
+        version: link:../../sdk/sdk-shared
+      zod:
+        specifier: 4.3.6
+        version: 4.3.6
+    devDependencies:
+      tsdown:
+        specifier: 0.20.1
+        version: 0.20.1(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(oxc-resolver@11.24.2)(typescript@5.6.2)
+
+  packages/plugins/themes:
+    dependencies:
+      '@threatmap/sdk-shared':
+        specifier: workspace:*
+        version: link:../../sdk/sdk-shared
+      zod:
+        specifier: 4.3.6
+        version: 4.3.6
+    devDependencies:
+      tsdown:
+        specifier: 0.20.1
+        version: 0.20.1(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(oxc-resolver@11.24.2)(typescript@5.6.2)
+
+  packages/plugins/tor:
+    dependencies:
+      '@threatmap/sdk-shared':
+        specifier: workspace:*
+        version: link:../../sdk/sdk-shared
+      zod:
+        specifier: 4.3.6
+        version: 4.3.6
+    devDependencies:
+      tsdown:
+        specifier: 0.20.1
+        version: 0.20.1(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(oxc-resolver@11.24.2)(typescript@5.6.2)
 
   packages/sdk/quickjs-types: {}
 
@@ -360,6 +457,30 @@ importers:
       vitest:
         specifier: 3.2.7
         version: 3.2.7(@types/node@22.17.2)(jsdom@20.0.3(supports-color@7.2.0))(supports-color@7.2.0)
+
+  tools/burp2threatmap:
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.2
+        version: 22.10.2
+      tsdown:
+        specifier: 0.20.1
+        version: 0.20.1(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(oxc-resolver@11.24.2)(typescript@5.6.2)
+      typescript:
+        specifier: 5.6.2
+        version: 5.6.2
+
+  tools/create-plugin:
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.2
+        version: 22.10.2
+      tsdown:
+        specifier: 0.20.1
+        version: 0.20.1(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(oxc-resolver@11.24.2)(typescript@5.6.2)
+      typescript:
+        specifier: 5.6.2
+        version: 5.6.2
 
   tools/eslint-config:
     dependencies:
