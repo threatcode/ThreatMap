@@ -29,6 +29,8 @@ jobs:
         uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca # v5.1.1
         with:
           experimental: true # Necessary for custom backend plugins
+          # This repo is itself the toolshed plugin; cached plugin clones go stale. Tool installs are fast (~5s), so skip the cache.
+          cache: false
 
       - name: Install dependencies
         run: pnpm install
