@@ -1,0 +1,26 @@
+{
+  "name": "@threatmap/create-plugin",
+  "version": "0.1.0",
+  "description": "Initializer for ThreatMap plugins",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "create-plugin": "./dist/index.mjs"
+  },
+  "files": [
+    "dist",
+    "templates"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "tsdown": "0.20.1",
+    "typescript": "5.6.2"
+  }
+}
