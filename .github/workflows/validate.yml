@@ -36,7 +36,7 @@ jobs:
         run: pnpm install
 
       - name: Build eslint-config
-        run: pnpm --filter @threatmap/eslint-config build
+        run: pnpm -r --if-present build
 
       - name: Run validation
         run: mise validate
