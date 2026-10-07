@@ -139,6 +139,19 @@ importers:
         specifier: 0.20.1
         version: 0.20.1(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(oxc-resolver@11.24.2)(typescript@5.6.2)
 
+  packages/plugins/tor:
+    dependencies:
+      '@threatmap/sdk-shared':
+        specifier: workspace:*
+        version: link:../../sdk/sdk-shared
+      zod:
+        specifier: 4.3.6
+        version: 4.3.6
+    devDependencies:
+      tsdown:
+        specifier: 0.20.1
+        version: 0.20.1(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(oxc-resolver@11.24.2)(typescript@5.6.2)
+
   packages/sdk/quickjs-types: {}
 
   packages/sdk/sdk-backend:
