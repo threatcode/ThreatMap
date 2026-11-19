@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@threatmap/sdk-shared": "workspace:*",
-    "zod": "4.1.12"
+    "zod": "4.6.6"
   },
   "devDependencies": {
     "tsdown": "0.21.7"
